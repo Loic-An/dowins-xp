@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>_</title>
+    <script type="text/javascript" src="scripts/shared.js" defer></script>
+    <script type="text/javascript" src="scripts/bios.js" defer></script>
+    <script type="text/javascript" src="scripts/desktop.js" defer></script>
+    <script type="text/javascript" src="scripts/main.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="style/main.css">
+    <link rel="stylesheet" type="text/css" href="style/bios.css">
+    <link rel="stylesheet" type="text/css" href="style/desktop.css">
+</head>
+
+<body>
+    <div id="bootPage" class="hidden">
+        <button type="button" title="start">
+            <svg width="200" height="200">
+                <circle cx="100" cy="100" r="50" stroke="grey" stroke-width="6" fill="none" />
+                <rect y="20" x="93" width="14" height="80" stroke="black" stroke-width="8" fill="grey" />
+            </svg>
+        </button>
+        <div id="biosContainer" class="hidden">
+            <div>
+                <img id="biosLogo" src="./images/xp48.svg" alt="logo48" class="hidden">
+                <p class="hidden">Socrimoft BIOS v0.01-PROTO, not An Energy Star Ally</p>
+                <p class="hidden">Copyleft (C) 2023-2024, Socrimoft Software, Inc.</p>
+            </div>
+            <div>
+                <p class="hidden">Main Processor : Socrimoft Virtual Processor @ 1GHz</p>
+                <p class="hidden" id="memorychecked">Memory Testing : 000000K</p>
+            </div>
+            <div>
+                <p class="hidden">Disks Testing : awaiting S.M.A.R.T. results</p>
+            </div>
+            <img id="energy" src="./images/energy.svg" alt="energy" class="hidden">
+            <div id="biosError">
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+            </div>
+            <div>
+                <p class="hidden">Unable to boot operating system on hard drive</p>
+                <p class="hidden">Attempting Network Boot</p>
+                <p class="hidden">Target found at 10.</p>
+            </div>
+            <p id="biosLoading">[.]</p>
+        </div>
+        <div id="bootScreen" class="hidden">
+            <div id="bootTop">
+                <span>Socrimoft</span>
+                <img id="bootLogo" src="./images/xp480_gradient.svg" alt="logo480">
+                <span>Windows</span>
+                <span>XP</span>
+                <span>Professional</span>
+            </div>
+            <div id="bootBar" class="hidden">
+                <p>A</p>
+                <p>B</p>
+                <p>C</p>
+                <p>D</p>
+                <p>E</p>
+                <p>F</p>
+                <p>G</p>
+                <p>H</p>
+                <p>I</p>
+                <p>J</p>
+                <p>K</p>
+                <p>L</p>
+                <p>M</p>
+                <p>N</p>
+                <p>O</p>
+            </div>
+            <div id="bootBottom">
+                <span>Copyleft C Socrimoft Corporation</span>
+                <span>Socrimoft</span>
+            </div>
+        </div>
+    </div>
+    <div id="desktopPage" class="hidden">
+        <img src="./images/background.jpg" alt="background" class="hidden">
+        <div id="desktop">
+            <div id="startMenu" class="hidden">
+                <div id="startMenuTop">
+                    <img src="./images/plane.png" alt="logo48">
+                    <span id="startMenuUsername">username</span>
+                </div>
+                <div id="startMenuLeft">
+                </div>
+                <div id="startMenuRight">
+                    <img src="./images/796.ico" alt="my documents">
+                    <span>My Documents</span>
+                    <img src="./images/170.ico" alt="my recent document">
+                    <span>My Recent Documents</span>
+                    <img src="./images/123.ico" alt="my computer">
+                    <span>My Computer</span>
+                    <img src="./images/142.ico" alt="network place">
+                    <span>My Network Places</span>
+                    <div></div>
+                    <img src="./images/182.ico" alt="control panel">
+                    <span>Control Panel</span>
+                    <img src="./images/633.ico" alt="network connection">
+                    <span>Network Connections</span>
+                    <img src="./images/436.ico" alt="printer">
+                    <span>Printers and Faxes</span>
+                    <div></div>
+                    <img src="./images/1375.ico" alt="search">
+                    <span>Search</span>
+                    <img src="./images/217.ico" alt="run">
+                    <span>Run...</span>
+                </div>
+                <div id="startMenuBottom">
+                    <div>
+                        <img src="./images/338.ico" alt="logout">
+                        <span>Log Off</span>
+                    </div>
+                    <div>
+                        <img src="./images/241.ico" alt="shutdown">
+                        <span>Turn Off Computer</span>
+                    </div>
+                </div>
+            </div>
+            <div id="taskBar">
+                <div id="startButton">
+                    <img src="./images/xp48_gradient.svg" alt="logo48">
+                    <span>Start</span>
+                </div>
+                <div id="taskBarIcons">
+                    <img src="./images/796.ico" alt="my documents">
+                    <img src="./images/497.ico" alt="recycle bin">
+                </div>
+                <div id="taskBarTime">
+                    <span>12:34 AM</span>
+
+                </div>
+            </div>
+            <div id="desktopIcons" class="hidden">
+                <div>
+                    <img src="./images/123.ico" alt="logo">
+                    <span>My Computer</span>
+                </div>
+                <div>
+                    <img src="./images/796.ico" alt="logo">
+                    <span>My Documents</span>
+                </div>
+                <div>
+                    <img src="./images/264.ico" alt="logo">
+                    <span>Recycle Bin</span>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>

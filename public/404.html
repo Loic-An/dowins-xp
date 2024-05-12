@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error</title>
+</head>
+
+<body>
+    <div>
+        <h1>Not Found</h1>
+        <p id="errorCode">Error Code: 404</p>
+        <p id="route"></p>
+    </div>
+    <script type="text/javascript">
+        const code = +"@code";
+        const message = "@message";
+        isNaN(code) || (document.getElementById("errorCode").textContent = `Error Code: ${code}`);
+        message.startsWith('@') || (document.querySelector('h1').textContent = message);
+        document.getElementById("route").textContent = `Route: ${window.location.pathname}`;
+    </script>
+</body>
+
+</html>
