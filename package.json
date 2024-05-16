@@ -5,6 +5,7 @@
   "scripts": {
     "build": "exit 0",
     "deploy": "wrangler deploy",
+    "postinstall": "wrangler d1 execute dowins-xp --file schema.sql",
     "prestart": "node ./generateprivatekey.js",
     "start": "wrangler pages dev",
     "poststart": "kill -9 $(ss --listening --process --tcp | grep 'workerd' | awk -F 'pid=' '{print $2}' | awk -F ',' '{print $1}' | sort -u) >/dev/null 2>&1 || true",
