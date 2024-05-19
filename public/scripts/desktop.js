@@ -31,7 +31,7 @@ async function login(username, password) {
 }
 async function signin(username, password) {
     try {
-        const res = fetch('/api/signin', {
+        const res = await fetch('/api/signin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
