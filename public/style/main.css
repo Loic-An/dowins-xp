@@ -14,3 +14,24 @@ body {
 .hidden {
     display: none !important;
 }
+
+#bluePage {
+    background-color: #0000AD;
+    width: 100lvw;
+    height: 100lvh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    > p:first-child {
+        padding-top: 8vmin;
+    }
+    > p {
+        min-height: 3.5vmin;
+        color: white;
+        font-size: 3.5vmin;
+        padding-left: 8vmin;
+        font-family: "Perfect DOS";
+        
+    }
+}

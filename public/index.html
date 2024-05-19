@@ -2,9 +2,11 @@
 <html lang="en">
 
 <head>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>_</title>
+    <link rel="prefetch" href="fonts/Perfect_DOS_VGA_437.ttf" as="font" type="font/ttf">
     <script type="text/javascript" src="scripts/shared.js" defer></script>
     <script type="text/javascript" src="scripts/bios.js" defer></script>
     <script type="text/javascript" src="scripts/desktop.js" defer></script>
@@ -15,6 +17,31 @@
 </head>
 
 <body>
+    <div id="bluePage" class="hidden">
+        <p>A problem has been detected and Dowins has been shut down to prevent damage</p>
+        <p>to your computer.</p>
+        <p> </p>
+        <p> </p>
+        <p>UNKNOWN_HARD_ERROR</p>
+        <p> </p>
+        <p>If this is the first time you've seen this Stop error screen,</p>
+        <p>restart your computer. If this screen appears again, follow these steps:</p>
+        <p> </p>
+        <p>Check to make sure any new hardware or software is properly installed.</p>
+        <p>If this is a new installation, ask your hardware or software manufacturer</p>
+        <p>for any Dowins updates you might need.</p>
+        <p> </p>
+        <p>If problems continue, disable or remove any newly installed hardware</p>
+        <p>or software. Disable BIOS memory options such as caching or shadowing.</p>
+        <p>If you need to use Safe Mode to remove or disable components, restart</p>
+        <p>your computer, press F8 to select Advanced Startup Options, and then</p>
+        <p>select Safe Mode.</p>
+        <p> </p>
+        <p>Technical information:</p>
+        <p> </p>
+        <p>*** STOP: 0x00000000 (0x00000000, 0x00000000)</p>
+        <p></p>
+    </div>
     <div id="bootPage" class="hidden">
         <button type="button" title="start">
             <svg width="200" height="200">
@@ -89,46 +116,66 @@
                 <div id="startMenuTop">
                     <img src="./images/plane.png" alt="logo48">
                     <span id="startMenuUsername">username</span>
+                    <div></div>
                 </div>
                 <div id="startMenuLeft">
                 </div>
                 <div id="startMenuRight">
-                    <img src="./images/796.ico" alt="my documents">
-                    <span>My Documents</span>
-                    <img src="./images/170.ico" alt="my recent document">
-                    <span>My Recent Documents</span>
-                    <img src="./images/123.ico" alt="my computer">
-                    <span>My Computer</span>
-                    <img src="./images/142.ico" alt="network place">
-                    <span>My Network Places</span>
+                    <button type="button">
+                        <img src="./images/796.ico" alt="my documents">
+                        <span>My Documents</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/170.ico" alt="my recent document">
+                        <span>My Recent Documents ‣</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/123.ico" alt="my computer">
+                        <span>My Computer</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/142.ico" alt="network place">
+                        <span>My Network Places</span>
+                    </button>
                     <div></div>
-                    <img src="./images/182.ico" alt="control panel">
-                    <span>Control Panel</span>
-                    <img src="./images/633.ico" alt="network connection">
-                    <span>Network Connections</span>
-                    <img src="./images/436.ico" alt="printer">
-                    <span>Printers and Faxes</span>
+                    <button type="button">
+                        <img src="./images/182.ico" alt="control panel">
+                        <span>Control Panel</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/633.ico" alt="network connection">
+                        <span>Network Connections</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/436.ico" alt="printer">
+                        <span>Printers and Faxes</span>
+                    </button>
                     <div></div>
-                    <img src="./images/1375.ico" alt="search">
-                    <span>Search</span>
-                    <img src="./images/217.ico" alt="run">
-                    <span>Run...</span>
+                    <button type="button">
+                        <img src="./images/1375.ico" alt="search">
+                        <span>Search</span>
+                    </button>
+                    <button type="button">
+                        <img src="./images/217.ico" alt="run">
+                        <span>Run...</span>
+                    </button>
                 </div>
                 <div id="startMenuBottom">
-                    <div>
+                    <button type="button">
                         <img src="./images/338.ico" alt="logout">
                         <span>Log Off</span>
-                    </div>
-                    <div>
+                    </button>
+                    <button type="button">
                         <img src="./images/241.ico" alt="shutdown">
                         <span>Turn Off Computer</span>
-                    </div>
+                    </button>
+
                 </div>
             </div>
-            <div id="taskBar">
+            <div id="taskBar" class="hidden">
                 <div id="startButton">
                     <img src="./images/xp48_gradient.svg" alt="logo48">
-                    <span>Start</span>
+                    <span>start</span>
                 </div>
                 <div id="taskBarIcons">
                     <img src="./images/796.ico" alt="my documents">

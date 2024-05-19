@@ -54,3 +54,11 @@ export function comparePassword(plain, hash) {
 export function hashPassword(password) {
     return bcrypt.hashSync(password, 8)
 }
+
+/**
+ * @param {import("@cloudflare/workers-types/experimental").D1Database} db
+ * @param {string} value
+ */
+export async function prepareDBpassword(db, value) {
+    return await db.prepare('SELECT Password FROM Users WHERE Username = ?1').bind(value).run()
+}

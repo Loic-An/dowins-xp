@@ -7,40 +7,43 @@ function startWindows() {
         windowManager.loginWindow()
     }
 }
-function login(username, password) {
-    fetch('/api/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    }).then((response) => {
-        return response.text()
-    }).then((data) => {
-        if (data) {
-            token = data
-            localStorage.setItem('token', data)
+async function login(username, password) {
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+        const text = await res.text()
+        if (res.ok) {
+            token = text
+            console.log(text)
+            localStorage.setItem('token', text)
             windowManager.loadDesktop()
+            return
         }
-    }).catch((error) => {
-        console.error('There has been a problem with your fetch operation:', error);
-    })
-}
-function signin(username, password) {
-    fetch('/api/signin', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    }).then((response) => {
-        return response.text()
-    }).then((data) => {
-        windowManager.warn(data)
+        throw new Error(text)
+    } catch (e) {
+        windowManager.error(e.message)
     }
-    ).catch((error) => {
-        windowManager.error('There has been a problem with your fetch operation:', error);
-    })
+}
+async function signin(username, password) {
+    try {
+        const res = fetch('/api/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        })
+        const text = await res.text()
+        if (res.ok) windowManager.log(data)
+        throw new Error(text)
+    } catch (error) {
+        windowManager.error(error.message);
+    }
 }
 
 class WindowManager {
@@ -62,11 +65,13 @@ class WindowManager {
     apps
     /**
      * @param {HTMLDivElement} taskbar
+     * @param {HTMLDivElement} startmenu
      * @param {HTMLDivElement} desktop
      */
-    constructor(taskbar, desktop) {
+    constructor(taskbar, startmenu, desktop) {
         this.windows = []
         this.taskbar = taskbar
+        this.startmenu = startmenu
         this.desktop = desktop
         this.apps = []
     }
@@ -80,6 +85,7 @@ class WindowManager {
         this.desktop.appendChild(window.htmlelement)
         window.zIndex = this.windows.length + 1
         this.taskbar.style.zIndex = this.windows.length + 2
+        this.startmenu.style.zIndex = this.windows.length + 3
         //this.updateAllZIndex()
     }
     /**
@@ -95,6 +101,7 @@ class WindowManager {
     updateAllZIndex() {
         this.windows.forEach((v, i) => v.zIndex = i + 2)
         this.taskbar.style.zIndex = this.windows.length + 2
+        this.startmenu.style.zIndex = this.windows.length + 3
     }
     /**
      * 
@@ -119,7 +126,7 @@ class WindowManager {
     }
     loginWindow() {
         this.addWindow(new XPWindow('Log On to Windows', '', (div) => {
-            div.innerHTML = `<div id="loginFormContainer">
+            div.innerHTML = `
             <form id="loginForm">
             <label for="username">Username :</label>
             <input type="text" id="username" name="username" autocomplete="username" required>
@@ -128,8 +135,7 @@ class WindowManager {
             <button type="submit">Log In</button>
             <button type="submit">Sign In</button>
             
-            </form>
-            </div>`
+            </form>`
             const form = div.querySelector('form')
             form.addEventListener('submit', (e) => {
                 e.preventDefault()
@@ -143,58 +149,70 @@ class WindowManager {
         }, (div) => {
             div.innerHTML =
                 `
-        <div>
         <p>Copyright 2024</p>
         <p>Socrimoft Corporation</p>
-        </div>
-        <div>
-        <img src="./images/xp48_gradient.svg" alt="xp48_gradient">
+        <img src="./images/xp480_gradient.svg" alt="xp48_gradient">
         <p>Socrimoft</p>
         <p>Windows</p>
         <p>XP</p>
         <p>Professional</p>
-        </div>
-        <p>Socrimoft</p>`}, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: true, id: 'loginWindow' }))
+        <p>Socrimoft</p>
+        <div></div>`}, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: true, id: 'loginWindow' }))
     }
     /**
-     * downloads 
+     * downloads apps dependencies
      */
     async preloadApps() {
         if (this.apps.length === 0) {
             //this.apps = (JSON.parse(localStorage.getItem('apps')) || await (await fetch('/api/appsInstalled', { headers: { "token": token } })).json()).appsInstalled || [""]
             if (!token) throw new Error('No token')
             let t = token.split('.')
-            if (t.length !== 3) throw new Error('Invalid token')
+            if (t.length !== 3) {
+                localStorage.removeItem('token')
+                windowManager.loginWindow()
+                throw new Error('Invalid token encountered. Please log in again.')
+            }
             this.apps = JSON.parse(atob(t[1])).appsInstalled || [""]
             if (this.apps[0] === "") {
                 this.apps = []
                 throw new Error('No apps installed')
             }
-            let link = null
-            let script = null
-            for (const app of this.apps) {
-                script = document.createElement('script')
-                script.src = `/apps/${app}/app.js`
-                script.type = "text/javascript"
-                document.head.appendChild(script)
-                link = document.createElement('link')
-                link.rel = 'stylesheet'
-                link.type = 'text/css'
-                link.href = `/apps/${app}/app.css`
-                document.head.appendChild(link)
-            }
+            /**
+             * @type {Promise<Event>[]}
+             */
+            let dls = []
+            this.apps.forEach((app) => {
+                dls.push(new Promise((resolve, reject) => {
+                    let link = document.createElement('link')
+                    link.rel = 'stylesheet'
+                    link.type = 'text/css'
+                    link.onload = resolve;
+                    link.onerror = reject;
+                    document.head.appendChild(link).href = `/apps/${app}/app.css`
+                }), new Promise((resolve, reject) => {
+                    let script = document.createElement('script')
+                    script.type = 'module'
+                    script.onload = resolve
+                    script.onerror = reject
+                    document.head.appendChild(script).src = `/apps/${app}/app.js`
+                }))
+            })
+            await Promise.all(dls)
         }
     }
     async loadDesktop() {
+        setInterval(() => this.clockUpdater(), 2000)
         try {
             await this.preloadApps()
-        } catch {
-            windowManager.error("Couldn't load user desktop. Please try again later.")
+        } catch (e) {
+            windowManager.error(e.message)
             return
         }
+        // on this point, the token should be valid because the apps are loaded
         const username = JSON.parse(atob(token.split('.')[1])).sub
         console.log(username)
         this.clearWindow() // remove login window
+        this.taskbar.classList.remove('hidden')
         document.querySelector('#desktopPage > img').classList.remove('hidden')
         //document.getElementById('desktopPage').addEventListener('click', (e) => { console.log(e.currentTarget); document.querySelectorAll('.selected').forEach((v) => v.classList.remove('selected')) })
         document.getElementById('desktopIcons').classList.remove('hidden')
@@ -212,7 +230,32 @@ class WindowManager {
             document.getElementById('startMenu').classList.toggle('hidden')
         })
         document.getElementById('startMenuUsername').innerText = username
-
+        document.querySelectorAll('#startMenuBottom > button').forEach((v) => {
+            v.addEventListener('click', () => {
+                localStorage.removeItem('token')
+                console.log(v.children[1].innerHTML)
+                if (v.children[1].innerHTML === "Turn Off Computer") localStorage.removeItem('hasBooted')
+                window.location.reload()
+            })
+        })
+        this.clockUpdater()
+        const startMenuleft = document.getElementById('startMenuLeft')
+        const app_modules = await Promise.allSettled(this.apps.map((v) => import(`/apps/${v}/app.js`)))
+        startMenuleft.innerHTML = app_modules.filter((v) => v.status === "fulfilled").map((v, i) => `<button type="button"><img src="./apps/${this.apps[i]}/app.ico" alt="${v.value.displayName}"><span>${v.value.displayName}</span></button>`).join('')
+        for (let i = 0; i < app_modules.length; i++) {
+            if (app_modules[i].status === 'fulfilled') {
+                const app = app_modules[i].value
+                startMenuleft.childNodes[i].addEventListener('click', () => {
+                    try {
+                        this.addWindow(new XPWindow(app.displayName, `./apps/${this.apps[i]}/app.ico`, app.appContent, app.toolbar, app.options))
+                    } catch (e) {
+                        windowManager.error("An error occurred while trying to open the app.")
+                    }
+                })
+            } else {
+                windowManager.error(app_modules[i].reason.message)
+            }
+        }
     }
     clearWindow() {
         while (this.windows.length > 0) this.windows.pop().remove()
@@ -239,6 +282,14 @@ class WindowManager {
             div.innerHTML = `<p>${message}</p>`
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
+    clockUpdater() {
+        const date = new Date()
+        const hour = (date.getUTCHours() % 12 || 12).toString().padStart(2, '0')
+        const minute = date.getMinutes().toString().padStart(2, '0')
+        const ampm = date.getUTCHours() >= 12 ? 'PM' : 'AM'
+        this.taskbar.querySelector('#taskBarTime span').innerText = `${hour}:${minute} ${ampm}`
+
+    }
 }
 class XPWindow {
     title
@@ -259,7 +310,8 @@ class XPWindow {
         this.title = title
         this.imgLocation = imgLocation
         this.options = options
-        this.htmlelement = XPWindow.createBasicWindow(title, imgLocation, options)
+        this.options.noToolbar = options.noToolbar || !toolbar
+        this.htmlelement = XPWindow.createBasicWindow(title, imgLocation, this.options)
         this.content = appcontent
         this.toolbar = toolbar
         console.log(this.htmlelement)
