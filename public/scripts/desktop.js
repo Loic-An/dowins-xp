@@ -249,7 +249,7 @@ class WindowManager {
                     try {
                         this.addWindow(new XPWindow(app.displayName, `./apps/${this.apps[i]}/app.ico`, app.appContent, app.toolbar, app.options))
                     } catch (e) {
-                        windowManager.error("An error occurred while trying to open the app.")
+                        windowManager.error("An error occurred while trying to open the app: " + e.message)
                     }
                 })
             } else {

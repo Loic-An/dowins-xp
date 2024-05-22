@@ -1,0 +1,8 @@
+#mediaCenter {
+    background-color: #0078d7;
+    color: white;
+    .windowContent {
+      padding: 0;
+      overflow: hidden;
+    }
+  }

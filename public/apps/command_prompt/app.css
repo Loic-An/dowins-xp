@@ -1,0 +1,9 @@
+#commandPrompt {
+    .windowContent {
+        background-color: #000;
+        color: #fff;
+        font-family: monospace;
+        padding: 10px;
+        border-top: 1px solid #fff;
+    }
+}

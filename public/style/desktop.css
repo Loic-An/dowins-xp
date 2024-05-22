@@ -319,7 +319,7 @@
 }
 
 .selected {
-    border: 1px dashed grey
+    border: 0.1vmin dashed grey !important;
 }
 
 #desktopIcons {
@@ -332,9 +332,10 @@
 
 #desktopIcons>div {
     display: grid;
-    grid-template: 1fr 1fr/ 1fr;
+    grid-template: 8vmin 2vmin/ 10vmin;
     align-items: center;
     justify-items: center;
+    border:1vmin solid #FFFFFF00;
 
     >img {
         width: 5vmin;
