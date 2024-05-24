@@ -39,7 +39,7 @@ async function biosSequence() {
     document.querySelectorAll("#biosContainer > :not(#biosLoading)").forEach((v) => v.classList.add('hidden'))
     biosLoading.style.gridRow = 1
     window.removeEventListener('resize', fun)
-    delete fun
+    //delete fun
     await wait(1000)
     biosContainer.classList.add("hidden")
     clearInterval(animation)
