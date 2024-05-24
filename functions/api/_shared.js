@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
  * @type {Uint8Array| import("jose").KeyLike | null}
  */
 var key = null;
-const appsInstalled = ["command_prompt", "hangman", "internet_explorer", "media_center"]
+const appsInstalled = ["command_prompt", "hangman", "internet_explorer", "media_center", "flipper"]
 /**
  * get shared key
  * @param {*} env 
@@ -62,3 +62,22 @@ export function hashPassword(password) {
 export async function prepareDBpassword(db, value) {
     return await db.prepare('SELECT Password FROM Users WHERE Username = ?1').bind(value).run()
 }
+
+/**
+ * @param {number} min 
+ * @param {number} max 
+ * @returns 
+ */
+export function getRandomWord(min, max) {
+    if (max > Object.keys(words).length) {
+        max = Object.keys(words).length - 1
+        if (min > Object.keys(words).length) min = Object.keys(words).length - 1
+    }
+    const index = min + Math.floor(Math.random() * (max - min))
+    return words[index][(Math.random() * words[index].length) | 0]
+}
+/**
+ * run `npm build` to populate the constant
+ * @type {{[key:number]:string[]}}
+ */
+const words = {}

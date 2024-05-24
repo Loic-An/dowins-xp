@@ -1,9 +1,17 @@
 #commandPrompt {
     .windowContent {
+        user-select: text;
         background-color: #000;
         color: #fff;
         font-family: monospace;
-        padding: 10px;
-        border-top: 1px solid #fff;
+        padding: 0.5vmin;
+        
+        p{
+            height: 1.2vmin;
+            font-size: 1.2vmin;
+        }
+        p:nth-last-child(2), p:nth-last-child(1) {
+            display:inline-block
+        }
     }
 }
