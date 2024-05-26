@@ -1,9 +1,10 @@
-function startWindows() {
+async function startWindows() {
     document.getElementById('bootPage').classList.add('hidden')
     document.getElementById('desktopPage').classList.remove('hidden')
     if (isLocalStorageAvailable() && (token = localStorage.getItem("token"))) {
         windowManager.loadDesktop()
     } else {
+        await wait(1000)
         windowManager.loginWindow()
     }
 }
@@ -26,7 +27,7 @@ async function login(username, password) {
         }
         throw new Error(text)
     } catch (e) {
-        windowManager.error(e.message)
+        windowManager.error(e.message || "An error occurred while trying to log in.")
     }
 }
 async function signin(username, password) {
@@ -42,7 +43,7 @@ async function signin(username, password) {
         if (res.ok) windowManager.log(data)
         throw new Error(text)
     } catch (error) {
-        windowManager.error(error.message);
+        windowManager.error(error.message || "An error occurred while trying to sign in.");
     }
 }
 

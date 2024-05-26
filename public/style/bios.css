@@ -83,7 +83,7 @@
     font-family: "Franklin Gothic Small", "Arial", Arial, sans-serif;
     font-size: 3vmin;
     display: grid;
-    grid-template: auto auto 6vmin /auto;
+    grid-template: 60lvh 30lvh 10lvh / auto;
     align-items: end;
 
 }
@@ -148,13 +148,22 @@
     }
 }
 
-.bootBarFill {
-    background-color: darkcyan;
-    color: darkcyan !important
+#bootBarFill1 {
+    background: rgb(40,56,199);
+    background: linear-gradient(0deg, rgba(40,56,199,1) 20%, rgba(135,159,240,1) 80%, rgba(40,56,199,1) 100%);
+}
+#bootBarFill2 {
+    background: rgb(40,56,199);
+background: linear-gradient(0deg, rgba(40,56,199,1) 40%, rgba(135,159,240,1) 80%, rgba(40,56,199,1) 100%);
+}
+#bootBarFill3 {
+    background: rgb(40,56,199);
+background: linear-gradient(0deg, rgba(40,56,199,1) 60%, rgba(135,159,240,1) 80%, rgba(40,56,199,1) 100%);
 }
 
 
 #bootBottom {
+    grid-row:3;
     margin: 2vmin;
 
     span {

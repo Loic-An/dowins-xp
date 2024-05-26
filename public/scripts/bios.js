@@ -1,6 +1,7 @@
 async function biosSequence() {
+    window.addEventListener('keydown', wtfami)
     document.querySelector("#bootPage button").classList.add("hidden")
-    await fullscreen().catch((e) => console.log(e))
+    //await fullscreen().catch((e) => console.log(e))
     const biosLoading = document.getElementById('biosLoading')
     const biosContainer = document.getElementById("biosContainer")
     let animation = setInterval(loadingAnimator, 100)
@@ -8,7 +9,6 @@ async function biosSequence() {
     await wait(700)
     document.getElementById("biosLogo").classList.remove('hidden')
     const ps = document.querySelectorAll("#biosContainer p")
-    console.log(ps[0].innerText.length)
     ps[0].classList.remove('hidden')
     await wait(100)
     document.getElementById("energy").classList.remove("hidden")
@@ -18,6 +18,7 @@ async function biosSequence() {
     await wait(100)
     ps[3].classList.remove('hidden')
     await wait(400)
+    window.removeEventListener('keydown', wtfami)
     await memoryChecker()
     ps[4].classList.remove('hidden')
     await wait(2000)
@@ -45,32 +46,35 @@ async function biosSequence() {
     clearInterval(animation)
     document.getElementById("bootScreen").classList.remove("hidden")
     await wait(3000)
-    const bootBarElem = document.querySelectorAll('#bootBar > *')
+    const bootBar = document.getElementById('bootBar')
+    const bootBarElem = bootBar.children
     let i = 0
-    document.getElementById('bootBar').classList.remove('hidden')
+    bootBar.classList.remove('hidden')
     animation = setInterval(() => {
-        if (i > 2)
-            bootBarElem[i - 3].classList.remove('bootBarFill')
-        if (i < bootBarElem.length)
-            bootBarElem[i].classList.add('bootBarFill')
-        i++
-        if (i > bootBarElem.length + 2)
-            i = 0
-        console.log(i)
-    }, 300)
+        i > 2 && (bootBarElem[i - 3].id = "")
+        i > 1 && i < bootBarElem.length + 2 && (bootBarElem[i - 2].id = "bootBarFill3")
+        i > 0 && i < bootBarElem.length + 1 && (bootBarElem[i - 1].id = "bootBarFill2")
+        i < bootBarElem.length && (bootBarElem[i].id = "bootBarFill1")
+        i !== bootBarElem.length + 2 ? i++ : i = 0
+    }, 200)
     await wait(10000)
     clearInterval(animation)
     document.getElementById('bootScreen').classList.add('hidden')
     isLocalStorageAvailable() && localStorage.setItem('hasBooted', "1")
     startWindows()
 }
-
+async function wtfami(e) {
+    window.removeEventListener('keydown', wtfami)
+    if (e.key === 'Escape') {
+        BSoD('User requested', 0, 0)
+    }
+}
 async function memoryChecker() {
     return new Promise((resolve, _) => {
         const memElem = document.getElementById("memorychecked")
         let current = 0
-        let mem = setInterval(() => {
-            current = parseInt(memElem.innerText.substring(16)) + Math.round(Math.random() * 4096)
+        const mem = setInterval(() => {
+            current = parseInt(memElem.innerText.substring(16)) + 2048
             memElem.innerText = "Memory Testing :"
             if (current > 524287) {
                 memElem.innerText += " 524288K OK - DDR400 CL2"
@@ -83,21 +87,18 @@ async function memoryChecker() {
     })
 }
 /**
- * 
  * @param {NodeListOf<HTMLParagraphElement>} plist 
  * @param {number} length
  */
 async function SMARTError(plist, arewewaiting = false) {
-    var width = Math.max(window.innerWidth, 1360)
-    var vmin = Math.min(width, window.innerHeight) / 100
-    var length = Math.round((width / 100) / 3 * vmin - 4) * 2
+    var length = Math.round(window.innerWidth * 400 / Math.min(window.innerWidth, window.innerHeight) / 7)
     plist[5].innerText = "#".repeat(length)
     arewewaiting && await wait(20)
     plist[6].innerText = "##" + "_".repeat(length - 4) + "##"
     arewewaiting && await wait(20)
-    plist[7].innerText = "##" + "_".repeat(length / 2 - 7) + "!_ERROR_!" + "_".repeat(length / 2 - 6) + "##"
+    plist[7].innerText = "##" + "_".repeat(length / 2 - 7 + length % 2) + "!_ERROR_!" + "_".repeat(length / 2 - 6) + "##"
     arewewaiting && await wait(20)
-    plist[8].innerText = "##" + "_".repeat(length / 2 - 16) + "!_NO_LOCAL_DRIVE_DETECTED_!" + "_".repeat(length / 2 - 15) + "##"
+    plist[8].innerText = "##" + "_".repeat(length / 2 - 16 + length % 2) + "!_NO_LOCAL_DRIVE_DETECTED_!" + "_".repeat(length / 2 - 15) + "##"
     arewewaiting && await wait(20)
     plist[9].innerText = "##" + "_".repeat(length - 4) + "##"
     arewewaiting && await wait(20)
