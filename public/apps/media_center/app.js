@@ -13,8 +13,6 @@ export const toolBar = undefined;
  */
 export function appContent(windowContent) {
     const video = document.createElement('iframe');
-    video.style.width = '80vmin';
-    video.style.height = '80vmin';
     video.frameBorder = '0';
     video.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
     video.allowFullscreen = true;

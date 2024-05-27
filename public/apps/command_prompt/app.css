@@ -7,7 +7,7 @@
         padding: 0.5vmin;
         
         p{
-            height: 1.2vmin;
+            height: 1.3vmin;
             font-size: 1.2vmin;
         }
         p:nth-last-child(2), p:nth-last-child(1) {
