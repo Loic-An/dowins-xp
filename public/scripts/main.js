@@ -13,7 +13,7 @@ function entrypoint() {
     const bootPage = document.getElementById("bootPage")
     const startupbutton = document.querySelector("#bootPage button")
     if (isLocalStorageAvailable() && ((token = localStorage.getItem("token")) || localStorage.getItem("hasBooted"))) {
-        startWindows()
+        startDowins()
     } else {
         bootPage.classList.remove("hidden")
         startupbutton.addEventListener('click', biosSequence)

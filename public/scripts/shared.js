@@ -19,20 +19,20 @@ function isLocalStorageAvailable() {
  */
 async function fullscreen() {
     const elem = document.documentElement
-    if (elem.requestFullscreen) {
+    if (elem.webkitRequestFullscreen) {
+        browser = "safari"
+        return await elem.webkitRequestFullscreen();
+    } else if (elem.requestFullscreen) {
         try {
             browser = "chromium"
-            return elem.requestFullscreen({ navigationUI: "hide" })
+            return await elem.requestFullscreen({ navigationUI: "hide" })
         }
         catch {
             browser = "firefox"
             return elem.requestFullscreen();
         }
-    } else if (elem.webkitRequestFullscreen) {
-        browser = "safari"
-        return elem.webkitRequestFullscreen();
     } else {
-        return new Promise((_, rej) => rej())
+        return await new Promise((_, rej) => rej("Fullscreen API is not supported in this browser"))
     }
 }
 
@@ -50,8 +50,6 @@ async function wait(ms) {
     return await promisifyTimeout(() => { }, ms)
 }
 
-function get() {
-}
 /**
  * @param {string} [message]
  * @param {number} [http_code]
@@ -64,13 +62,30 @@ function BSoD(message, http_code, cf_id) {
         console.error(message)
         bluePage.querySelector(':nth-child(5)').innerText = message.replaceAll(' ', '_').toUpperCase()
     }
-    if (http_code || cf_id) {
-        cf_id = cf_id || '0000000000000000'
-        http_code = String(http_code || 0).padStart(8, '0')
-        let cf = [cf_id.slice(0, 8).padEnd(8, '0'), cf_id.slice(8, 16).padEnd(8, '0')]
-        bluePage.querySelector(':nth-child(22)').innerText = `*** STOP: 0x${http_code
-            .toUpperCase()} (0x${cf[0].toUpperCase()}, 0x${cf[1].toUpperCase()})`
-    }
+    /**
+     * @type {HTMLScriptElement}
+     */
+    let beacon
+    if (!cf_id && (beacon = document.body.querySelector('script[data-cf-beacon]'))) cf_id = beacon.dataset.cfBeacon.slice(11, 43)
+    else
+        cf_id = cf_id || '00000000000000000000000000000000'
+    http_code = String(http_code || 0).padStart(8, '0')
+    let cf = [cf_id.slice(0, 8).padEnd(8, '0'), cf_id.slice(8, 16).padEnd(8, '0'), cf_id.slice(16, 24).padEnd(8, '0'), cf_id.slice(24, 32).padEnd(8, '0')]
+    bluePage.querySelector(':nth-child(22)').innerText = `*** STOP: 0x${http_code
+        .toUpperCase()} (0x${cf[0]}, 0x${cf[1]}, 0x${cf[2]}, 0x${cf[3]})`
+
     bluePage.classList.remove('hidden')
     localStorage.clear()
 }
+/**
+ * @param {string[]} values
+ * @returns {{readonly [P in string]: P}}
+ */
+function createEnum(values) {
+    const enumObject = {};
+    for (const val of values) {
+        enumObject[val] = val;
+    }
+    return Object.freeze(enumObject);
+}
+const browserEnum = createEnum(["webkit", "firefox", "chromium"])

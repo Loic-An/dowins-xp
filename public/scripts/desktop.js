@@ -1,4 +1,4 @@
-async function startWindows() {
+async function startDowins() {
     document.getElementById('bootPage').classList.add('hidden')
     document.getElementById('desktopPage').classList.remove('hidden')
     if (isLocalStorageAvailable() && (token = localStorage.getItem("token"))) {
@@ -46,7 +46,9 @@ async function signin(username, password) {
         windowManager.error(error.message || "An error occurred while trying to sign in.");
     }
 }
-
+function movehandler(event) {
+    windowManager.clickManager.activeTarget && windowManager.clickManager.activeTarget.move(event, windowManager.clickManager.action)
+}
 class WindowManager {
     /**
      * @type {XPWindow[]}
@@ -65,6 +67,11 @@ class WindowManager {
      */
     apps
     /**
+     * @type {{activeTarget:null|XPWindow,action:null|"move"|"resizeUp"|"resizeDown"|"resizeLeft"|"resizeRight"}}
+     */
+    clickManager = { activeTarget: null, action: null }
+    isStartMenuHidden = true
+    /**
      * @param {HTMLDivElement} taskbar
      * @param {HTMLDivElement} startmenu
      * @param {HTMLDivElement} desktop
@@ -75,6 +82,11 @@ class WindowManager {
         this.startmenu = startmenu
         this.desktop = desktop
         this.apps = []
+        this.desktop.addEventListener('mouseup', () => {
+            this.desktop.removeEventListener('mousemove', movehandler)
+            this.clickManager.activeTarget = null
+            this.clickManager.action = null
+        })
     }
     /**
      * 
@@ -87,7 +99,9 @@ class WindowManager {
         window.zIndex = this.windows.length + 1
         this.taskbar.style.zIndex = this.windows.length + 2
         this.startmenu.style.zIndex = this.windows.length + 3
-        //this.updateAllZIndex()
+        window.resetPosition()
+        this.updateAllZIndex()
+        windowManager.toggleStartMenu()
     }
     /**
      * @param {XPWindow} window 
@@ -100,17 +114,23 @@ class WindowManager {
 
     }
     updateAllZIndex() {
-        this.windows.forEach((v, i) => v.zIndex = i + 2)
+        this.windows.forEach((v, i) => {
+            v.zIndex = i + 2
+            if (this.windows.length !== i + 1) v.htmlelement.classList.add('idleWindow')
+            else v.htmlelement.classList.remove('idleWindow')
+        })
         this.taskbar.style.zIndex = this.windows.length + 2
         this.startmenu.style.zIndex = this.windows.length + 3
     }
     /**
-     * 
+     * not used
      */
     minimizeAll() {
         this.windows.forEach(v => { if (!v.options.notMinizable) v.htmlelement.classList.add('minimized') })
     }
     /**
+     * move the window to the foreground by changing its z-index, and moving it to the end of the windows array
+     * executing this method will also update the z-index of all windows
      * @param {XPWindow} window
      */
     foregroundWindow(window) {
@@ -150,11 +170,11 @@ class WindowManager {
         }, (div) => {
             div.innerHTML =
                 `
-        <p>Copyright 2024</p>
+        <p>Copyleft 2024</p>
         <p>Socrimoft Corporation</p>
         <img src="./images/xp480_gradient.svg" alt="xp48_gradient">
         <p>Socrimoft</p>
-        <p>Windows</p>
+        <p>Dowins</p>
         <p>XP</p>
         <p>Professional</p>
         <p>Socrimoft</p>
@@ -227,9 +247,7 @@ class WindowManager {
                 v.classList.toggle('selected')
             })
         })
-        document.getElementById('startButton').addEventListener('click', () => {
-            document.getElementById('startMenu').classList.toggle('hidden')
-        })
+        document.getElementById('startButton').addEventListener('click', () => this.toggleStartMenu())
         document.getElementById('startMenuUsername').innerText = username
         document.querySelectorAll('#startMenuBottom > button').forEach((v) => {
             v.addEventListener('click', () => {
@@ -262,6 +280,19 @@ class WindowManager {
         while (this.windows.length > 0) this.windows.pop().remove()
         this.updateAllZIndex()
     }
+    toggleStartMenu() {
+        this.startmenu.classList.toggle('hidden', this.isStartMenuVisible = !this.isStartMenuVisible)
+    }
+    /**
+     * 
+     * @param {XPWindow} target
+     * @param {"move"|"resizeUp"|"resizeDown"|"resizeLeft"|"resizeRight"} action
+     */
+    registerActiveTarget(target, action) {
+        this.clickManager.activeTarget = target
+        this.clickManager.action = action
+        this.desktop.addEventListener('mousemove', movehandler)
+    }
     popWindow() {
         if (this.windows.length > 0) {
             this.windows.pop().remove()
@@ -289,8 +320,8 @@ class WindowManager {
         const minute = date.getMinutes().toString().padStart(2, '0')
         const ampm = date.getUTCHours() >= 12 ? 'PM' : 'AM'
         this.taskbar.querySelector('#taskBarTime span').innerText = `${hour}:${minute} ${ampm}`
-
     }
+
 }
 class XPWindow {
     title
@@ -323,7 +354,6 @@ class XPWindow {
      * @param {string|null} imgLocation
      * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string}} options
      * @returns {HTMLDivElement} A basic window. No content, no toolbar generated
-     * @static
      */
     static createBasicWindow(title, imgLocation, options) {
         const approot = document.createElement('div')
@@ -337,22 +367,27 @@ class XPWindow {
         const windowTitle = document.createElement('span')
         header.appendChild(windowTitle)
         windowTitle.innerText = title
-        if (!options.notMinizable) {
-            const minimize = document.createElement('button')
-            minimize.classList.add('minimize')
-            header.appendChild(minimize)
+        const flexbutton = document.createElement('div')
+        flexbutton.classList.add('windowButtonContainer')
+        if (!options.notClosable) {
+            const close = document.createElement('img')
+            close.src = '/images/bclose.png'
+            close.classList.add('close')
+            flexbutton.appendChild(close)
         }
         if (!options.notMaximizable) {
-            const maximize = document.createElement('button')
+            const maximize = document.createElement('img')
+            maximize.src = '/images/bmaximize.png'
             maximize.classList.add('maximize')
-            header.appendChild(maximize)
+            flexbutton.appendChild(maximize)
         }
-        if (!options.notClosable) {
-            const close = document.createElement('button')
-            close.classList.add('close')
-            header.appendChild(close)
+        if (!options.notMinizable) {
+            const minimize = document.createElement('img')
+            minimize.src = '/images/bminimize.png'
+            minimize.classList.add('minimize')
+            flexbutton.appendChild(minimize)
         }
-
+        header.append(flexbutton)
         //approot.classList.add('resizable')
         const resizerUp = document.createElement('div')
         resizerUp.classList.add('windowUp')
@@ -367,20 +402,6 @@ class XPWindow {
             resizerUp.classList.add('resizer')
             resizerLeft.classList.add('resizer')
             resizerRight.classList.add('resizer')
-            resizerUp.addEventListener('mousedown', (e) => {
-                approot.style.height = (approot.offsetHeight - e.movementY) + 'px'
-                approot.style.top = (approot.offsetTop + e.movementY) + 'px'
-            })
-            resizerDown.addEventListener('mousedown', (e) => {
-                approot.style.height = (approot.offsetHeight + e.movementY) + 'px'
-            })
-            resizerLeft.addEventListener('mousedown', (e) => {
-                approot.style.width = (approot.offsetWidth - e.movementX) + 'px'
-                approot.style.left = (approot.offsetLeft + e.movementX) + 'px'
-            })
-            resizerRight.addEventListener('mousedown', (e) => {
-                approot.style.width = (approot.offsetWidth + e.movementX) + 'px'
-            })
         }
         approot.appendChild(resizerUp)
         approot.appendChild(resizerDown)
@@ -404,18 +425,12 @@ class XPWindow {
         this.content && this.content(this.htmlelement.querySelector('.windowContent'))
         this.toolbar && this.toolbar(this.htmlelement.querySelector('.toolbar'))
         this.options.id && this.htmlelement.setAttribute('id', this.options.id)
-        const funmove = (e) => this.move(e)
         //initialize event listeners
         this.htmlelement.querySelector('header').addEventListener('mousedown', (e) => {
-            console.log("bite")
+            if (this.htmlelement.classList.contains('maximized')) return
+            if (this.htmlelement.classList.contains('minimized')) return
             windowManager.foregroundWindow(this)
-            this.htmlelement.querySelector('header').addEventListener('mousemove', funmove)
-        })
-        this.htmlelement.querySelector('header').addEventListener('mouseout', (e) => {
-            this.htmlelement.querySelector('header').removeEventListener('mousemove', funmove)
-        })
-        this.htmlelement.querySelector('header').addEventListener('mouseup', (e) => {
-            this.htmlelement.querySelector('header').removeEventListener('mousemove', funmove)
+            windowManager.registerActiveTarget(this, "move")
         })
         if (!this.options.notMinizable) {
             this.htmlelement.querySelector('.minimize').addEventListener('click', () => {
@@ -432,14 +447,64 @@ class XPWindow {
                 windowManager.removeWindow(this)
             })
         }
+        if (!this.options.notResizable) {
+            this.htmlelement.querySelector('.windowUp').addEventListener('mousedown', (e) => {
+                if (this.htmlelement.classList.contains('maximized')) return
+                if (this.htmlelement.classList.contains('minimized')) return
+                windowManager.registerActiveTarget(this, "resizeUp")
+            })
+            this.htmlelement.querySelector('.windowDown').addEventListener('mousedown', (e) => {
+                if (this.htmlelement.classList.contains('maximized')) return
+                if (this.htmlelement.classList.contains('minimized')) return
+                windowManager.registerActiveTarget(this, "resizeDown")
+            })
+            this.htmlelement.querySelector('.windowLeft').addEventListener('mousedown', (e) => {
+                if (this.htmlelement.classList.contains('maximized')) return
+                if (this.htmlelement.classList.contains('minimized')) return
+                windowManager.registerActiveTarget(this, "resizeLeft")
+            })
+            this.htmlelement.querySelector('.windowRight').addEventListener('mousedown', (e) => {
+                if (this.htmlelement.classList.contains('maximized')) return
+                if (this.htmlelement.classList.contains('minimized')) return
+                windowManager.registerActiveTarget(this, "resizeRight")
+            })
+        }
     }
     /**
      * moves the window according to the mouse position
-     * @param {MouseEvent} MouseEvent
+     * @param {MouseEvent} e
+     * @param {"move"|"resizeUp"|"resizeDown"|"resizeLeft"|"resizeRight"} action 
      */
-    move(MouseEvent) {
-        this.htmlelement.style.left = (this.htmlelement.offsetLeft + MouseEvent.movementX) + 'px'
-        this.htmlelement.style.top = (this.htmlelement.offsetTop + MouseEvent.movementY) + 'px'
+    move(e, action) {
+        switch (action) {
+            case "move":
+                this.htmlelement.style.left = (this.htmlelement.offsetLeft + e.movementX) + 'px'
+                this.htmlelement.style.top = (this.htmlelement.offsetTop + e.movementY) + 'px'
+                return
+            case "resizeUp":
+                this.htmlelement.style.height = (this.htmlelement.offsetHeight - e.movementY) + 'px'
+                this.htmlelement.style.top = (this.htmlelement.offsetTop + e.movementY) + 'px'
+                return
+            case "resizeDown":
+                this.htmlelement.style.height = (this.htmlelement.offsetHeight + e.movementY) + 'px'
+                return
+            case "resizeLeft":
+                this.htmlelement.style.width = (this.htmlelement.offsetWidth - e.movementX) + 'px'
+                this.htmlelement.style.left = (this.htmlelement.offsetLeft + e.movementX) + 'px'
+                return
+            case "resizeRight":
+                this.htmlelement.style.width = (this.htmlelement.offsetWidth + e.movementX) + 'px'
+                return
+            default:
+                return
+        }
+    }
+    /**
+     * resets the position of the window according to the z-index
+     */
+    resetPosition() {
+        this.htmlelement.style.left = (this.zIndex - 1) * 3 + 'vmin'
+        this.htmlelement.style.top = (this.zIndex - 1) * 3 + 'vmin'
     }
     remove() {
         this.htmlelement.remove()

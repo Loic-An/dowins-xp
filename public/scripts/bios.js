@@ -61,7 +61,7 @@ async function biosSequence() {
     clearInterval(animation)
     document.getElementById('bootScreen').classList.add('hidden')
     isLocalStorageAvailable() && localStorage.setItem('hasBooted', "1")
-    startWindows()
+    startDowins()
 }
 async function wtfami(e) {
     window.removeEventListener('keydown', wtfami)
