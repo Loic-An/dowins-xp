@@ -51,7 +51,7 @@
 }
 
 #energy {
-    top: 0px;
+    top: 0;
     width: 100%;
     grid-column: 2;
     grid-row: 1/4;
@@ -135,7 +135,7 @@
     width: -moz-fit-content;
     width: fit-content;
     border: 0.25vmin solid rgb(174, 174, 174);
-    border-radius: 3px;
+    border-radius: 0.3vmin;
     display: grid;
     grid-template: 2.5vmin/2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin 2vmin;
 
