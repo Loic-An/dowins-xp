@@ -154,7 +154,7 @@ class WindowManager {
             <label for="username">Username :</label>
             <input type="text" id="username" name="username" autocomplete="username" required>
             <label for="password">Password :</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
             <button type="submit">Log In</button>
             <button type="submit">Sign In</button>
             
@@ -362,6 +362,7 @@ class XPWindow {
         if (imgLocation) {
             const windowLogo = document.createElement('img')
             windowLogo.src = imgLocation
+            windowLogo.title = title
             header.appendChild(windowLogo)
         }
         const windowTitle = document.createElement('span')
@@ -372,18 +373,21 @@ class XPWindow {
         if (!options.notClosable) {
             const close = document.createElement('img')
             close.src = '/images/bclose.png'
+            close.title = 'close'
             close.classList.add('close')
             flexbutton.appendChild(close)
         }
         if (!options.notMaximizable) {
             const maximize = document.createElement('img')
             maximize.src = '/images/bmaximize.png'
+            maximize.title = 'maximize'
             maximize.classList.add('maximize')
             flexbutton.appendChild(maximize)
         }
         if (!options.notMinizable) {
             const minimize = document.createElement('img')
             minimize.src = '/images/bminimize.png'
+            minimize.title = 'minimize'
             minimize.classList.add('minimize')
             flexbutton.appendChild(minimize)
         }

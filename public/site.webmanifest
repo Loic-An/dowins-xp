@@ -8,21 +8,15 @@
         }
     ],
     "start_url": "https://dowins-xp.pages.dev",
-    "display_override": [
-        "fullscreen",
-        "minimal-ui"
-    ],
     "background_color": "#000000",
     "orientation": "landscape",
     "display": "standalone",
     "id": "/",
     "screenshots": [
         {
-            "src": "images/background_wide.jpg",
-            "sizes": "7680x4320",
-            "type": "image/jpeg",
-            "form_factor": "wide",
-            "label": "Homescreen"
+            "src": "images/background.jpg",
+            "sizes": "5120x2880",
+            "type": "image/jpeg"
         }
     ]
 }
