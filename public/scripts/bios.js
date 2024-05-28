@@ -1,7 +1,7 @@
 async function biosSequence() {
     window.addEventListener('keydown', wtfami)
     document.querySelector("#bootPage button").classList.add("hidden")
-    //await fullscreen().catch((e) => console.log(e))
+    await fullscreen().catch((e) => void 0)
     const biosLoading = document.getElementById('biosLoading')
     const biosContainer = document.getElementById("biosContainer")
     let animation = setInterval(loadingAnimator, 100)

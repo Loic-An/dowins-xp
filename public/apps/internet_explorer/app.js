@@ -39,14 +39,17 @@ export function appContent(window) {
     //iframe.addEventListener('load', () => { console.log(iframe.contentWindow.location.href); urlbar.value = iframe.contentWindow.location.href; });
     window.appendChild(frame);
     iframeURLChange(frame, (url) => console.log(url));
-    frame.contentWindow.removeEventListener
+    console.log(frame.contentWindow)
     //console.log(iframe.contentWindow.location.href)
 }
 
 function loadURL(url) {
     frame.src = url;
 }
-
+/**
+ * @param {HTMLIFrameElement} iframe 
+ * @param {Function} callback 
+ */
 function iframeURLChange(iframe, callback) {
     var unloadHandler = function () {
         // Timeout needed because the URL changes immediately after
@@ -56,11 +59,16 @@ function iframeURLChange(iframe, callback) {
         }, 0);
     };
 
-    function attachUnload() {
+    /**
+     * 
+     * @param {HTMLIFrameElement} f
+     * @param {Event} e 
+     */
+    function attachUnload(f, e) {
         // Remove the unloadHandler in case it was already attached.
         // Otherwise, the change will be dispatched twice.
-        iframe.contentWindow.removeEventListener("unload", unloadHandler);
-        iframe.contentWindow.addEventListener("unload", unloadHandler);
+        f.contentWindow.removeEventListener("unload", unloadHandler);
+        f.contentWindow.addEventListener("unload", unloadHandler);
     }
 
     iframe.addEventListener("load", attachUnload);

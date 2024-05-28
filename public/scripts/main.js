@@ -1,10 +1,8 @@
 var token = ""
 const windowManager = new WindowManager(document.getElementById('taskBar'), document.getElementById('startMenu'), document.getElementById('desktopPage'))
-console.log('windowmanager created')
 window.addEventListener("DOMContentLoaded", entrypoint)
 
 function entrypoint() {
-    console.log("DOMContentLoaded")
     /*window.addEventListener('resize', () => {
         if (window.innerWidth < window.innerHeight) {
             BSoD("Portrait mode unexpected", 0, 0)

@@ -93,8 +93,7 @@ class Prompt {
         this.windowContent.lastChild.remove()
         const command = this.ps[this.ps.length - 1].textContent.slice(this.initialSize[this.ps.length - 1])
         this.history.push(command)
-        this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>`)
-        this.windowContent.appendChild(document.createElement('p')).textContent = '▮'
+        this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>\n▮`)
         this.blinking = true
     }
 }

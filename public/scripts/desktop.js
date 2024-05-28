@@ -19,9 +19,7 @@ async function login(username, password) {
         })
         const text = await res.text()
         if (res.ok) {
-            token = text
-            console.log(text)
-            localStorage.setItem('token', text)
+            localStorage.setItem('token', token = text)
             windowManager.loadDesktop()
             return
         }
@@ -67,6 +65,10 @@ class WindowManager {
      */
     apps
     /**
+     * @type {HTMLDivElement|null}
+     */
+    desktopiconselected = null
+    /**
      * @type {{activeTarget:null|XPWindow,action:null|"move"|"resizeUp"|"resizeDown"|"resizeLeft"|"resizeRight"}}
      */
     clickManager = { activeTarget: null, action: null }
@@ -101,7 +103,7 @@ class WindowManager {
         this.startmenu.style.zIndex = this.windows.length + 3
         window.resetPosition()
         this.updateAllZIndex()
-        windowManager.toggleStartMenu()
+        if (!this.isStartMenuHidden) this.toggleStartMenu()
     }
     /**
      * @param {XPWindow} window 
@@ -178,7 +180,7 @@ class WindowManager {
         <p>XP</p>
         <p>Professional</p>
         <p>Socrimoft</p>
-        <div></div>`}, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: true, id: 'loginWindow' }))
+        <div></div>`}, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: true, id: 'loginWindow', noResetPosition: true }))
     }
     /**
      * downloads apps dependencies
@@ -231,20 +233,20 @@ class WindowManager {
         }
         // on this point, the token should be valid because the apps are loaded
         const username = JSON.parse(atob(token.split('.')[1])).sub
-        console.log(username)
         this.clearWindow() // remove login window
         this.taskbar.classList.remove('hidden')
         document.querySelector('#desktopPage > img').classList.remove('hidden')
-        //document.getElementById('desktopPage').addEventListener('click', (e) => { console.log(e.currentTarget); document.querySelectorAll('.selected').forEach((v) => v.classList.remove('selected')) })
         document.getElementById('desktopIcons').classList.remove('hidden')
         document.querySelectorAll('#desktopIcons > div').forEach((v) => {
-            //v.addEventListener('dblclick', () => windowManager.error(`Dowins couldn't find "explorer.exe". Please check spelling and try again.`))
             v.addEventListener('click', (e) => {
-                console.log("bb")
-                if (v.classList.contains('selected')) {
+                v.classList.toggle('selected', this.desktopiconselected !== v)
+                if (this.desktopiconselected === v) {
                     windowManager.error(`Dowins cannot find "explorer.exe". Please check spelling and try again.`)
+                    this.desktopiconselected = null
+                    return
                 }
-                v.classList.toggle('selected')
+                if (this.desktopiconselected) this.desktopiconselected.classList.remove('selected')
+                this.desktopiconselected = v
             })
         })
         document.getElementById('startButton').addEventListener('click', () => this.toggleStartMenu())
@@ -252,7 +254,6 @@ class WindowManager {
         document.querySelectorAll('#startMenuBottom > button').forEach((v) => {
             v.addEventListener('click', () => {
                 localStorage.removeItem('token')
-                console.log(v.children[1].innerHTML)
                 if (v.children[1].innerHTML === "Turn Off Computer") localStorage.removeItem('hasBooted')
                 window.location.reload()
             })
@@ -281,7 +282,7 @@ class WindowManager {
         this.updateAllZIndex()
     }
     toggleStartMenu() {
-        this.startmenu.classList.toggle('hidden', this.isStartMenuVisible = !this.isStartMenuVisible)
+        this.startmenu.classList.toggle('hidden', this.isStartMenuHidden = !this.isStartMenuHidden)
     }
     /**
      * 
@@ -346,13 +347,12 @@ class XPWindow {
         this.htmlelement = XPWindow.createBasicWindow(title, imgLocation, this.options)
         this.content = appcontent
         this.toolbar = toolbar
-        console.log(this.htmlelement)
     }
 
     /**
      * @param {string} title 
      * @param {string|null} imgLocation
-     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string}} options
+     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string,noResetPosition?:boolean}} options
      * @returns {HTMLDivElement} A basic window. No content, no toolbar generated
      */
     static createBasicWindow(title, imgLocation, options) {
@@ -503,6 +503,7 @@ class XPWindow {
      * resets the position of the window according to the z-index
      */
     resetPosition() {
+        if (this.options.noResetPosition) return
         this.htmlelement.style.left = (this.zIndex - 1) * 3 + 'vmin'
         this.htmlelement.style.top = (this.zIndex - 1) * 3 + 'vmin'
     }

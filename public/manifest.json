@@ -1,0 +1,28 @@
+{
+    "name": "Dowins XP",
+    "icons": [
+        {
+            "src": "images/xp480_gradient.svg",
+            "type": "image/svg+xml",
+            "sizes": "480x480"
+        }
+    ],
+    "start_url": "https://dowins-xp.pages.dev",
+    "display_override": [
+        "fullscreen",
+        "minimal-ui"
+    ],
+    "background_color": "#000000",
+    "orientation": "landscape",
+    "display": "standalone",
+    "id": "/",
+    "screenshots": [
+        {
+            "src": "images/background_wide.jpg",
+            "sizes": "7680x4320",
+            "type": "image/jpeg",
+            "form_factor": "wide",
+            "label": "Homescreen"
+        }
+    ]
+}
