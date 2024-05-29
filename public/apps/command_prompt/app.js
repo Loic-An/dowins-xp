@@ -1,7 +1,6 @@
 export const displayName = 'Command Prompt';
 
 export const options = { id: 'commandPrompt' }
-let ps = []
 
 /**
  * @type {(toolBar:HTMLElement)=>void}
@@ -28,6 +27,7 @@ class Prompt {
      * @type {string[]}
      */
     history = []
+    historyIndex = 0
     windowContent
     /**
      * @param {HTMLElement} windowContent
@@ -58,18 +58,25 @@ class Prompt {
         switch (e.key) {
             case 'Enter':
                 if (this.ps[this.ps.length - 1].textContent !== 'C:/>') this.executeCommand()
-                this.addText('C:/>')
+                else this.addText('C:/>')
                 break
             case 'Backspace':
                 this.removeChar()
                 break
             case 'ArrowLeft':
             case 'ArrowRight':
+                //flemme de le faire
                 break
             case 'ArrowUp':
-            case 'ArrowDown':
+                if (this.historyIndex > 0) {
+                    this.ps[this.ps.length - 1].textContent = 'C:/>' + this.history[--this.historyIndex]
+                } else this.ps[this.ps.length - 1].textContent = 'C:/>'
                 break
-
+            case 'ArrowDown':
+                if (this.historyIndex < this.history.length - 1) {
+                    this.ps[this.ps.length - 1].textContent = 'C:/>' + this.history[++this.historyIndex]
+                } else this.ps[this.ps.length - 1].textContent = 'C:/>'
+                break
             default:
                 console.log(e.key)
                 e.key.length === 1 && this.appendText(e.key)
@@ -92,8 +99,31 @@ class Prompt {
         this.blinking = false
         this.windowContent.lastChild.remove()
         const command = this.ps[this.ps.length - 1].textContent.slice(this.initialSize[this.ps.length - 1])
+        switch (command) {
+            case 'cls':
+            case 'clear':
+                this.ps.forEach(e => e.remove())
+                this.ps = []
+                this.addText('C:/>')
+                break
+            case 'history':
+                this.addText(this.history.join('\n') + '\nC:/>')
+                break
+            case 'exit':
+                const window = windowManager.reverseLookup(this.windowContent)
+                if (window) windowManager.removeWindow(window)
+                else this.addText(`'exit' is not recognized as an internal or external command, operable program or batch file.\nC:/>`)
+                break
+            case 'whoami':
+                this.addText(`${document.getElementById('startMenuUsername').innerText}\nC:/>`)
+                break
+            default:
+                this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>`)
+                break
+        }
         this.history.push(command)
-        this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>\n▮`)
+        this.historyIndex++
+        this.windowContent.appendChild(document.createElement('p')).textContent = '▮'
         this.blinking = true
     }
 }
