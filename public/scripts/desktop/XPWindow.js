@@ -11,7 +11,7 @@ class XPWindow {
      * @param {string|null} imgLocation
      * @param {(windowContent:HTMLElement)=>void} [appcontent]
      * @param {(toolBar:HTMLElement)=>void} [toolbar] 
-     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string}} options
+     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string,noResetPosition?:boolean,unique?:boolean}} options
      */
     constructor(title, imgLocation, appcontent, toolbar, options = {}) {
         this.title = title
@@ -26,7 +26,7 @@ class XPWindow {
     /**
      * @param {string} title 
      * @param {string|null} imgLocation
-     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string,noResetPosition?:boolean}} options
+     * @param {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string,noResetPosition?:boolean,unique?:boolean}} options
      * @returns {HTMLDivElement} A basic window. No content, no toolbar generated
      */
     static createBasicWindow(title, imgLocation, options) {

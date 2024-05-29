@@ -49,6 +49,15 @@ class WindowManager {
      * @param {XPWindow} window 
      */
     addWindow(window) {
+        if (window.options.unique) {
+            this.windows.forEach(v => {
+                if (v.options.id === window.options.id) {
+                    this.foregroundWindow(v)
+                    return
+                }
+            })
+            return
+        }
         window.initialize()
         this.windows.push(window)
         this.desktop.appendChild(window.htmlelement)
