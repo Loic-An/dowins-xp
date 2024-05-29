@@ -3,9 +3,20 @@
 
 <head>
     <meta charset="utf-8">
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <script type="module" async>
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.register('/scripts/sw.js');
+                console.log('Service Worker registered:', registration);
+                await registration.update();
+            } catch (error) {
+                console.log('Service Worker registration failed:', error);
+            }
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>_</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
     <link rel="prefetch" href="fonts/Perfect_DOS_VGA_437.ttf" as="font" type="font/ttf">
     <script type="text/javascript" src="scripts/shared.js" defer></script>
     <script type="text/javascript" src="scripts/bios.js" defer></script>
@@ -129,7 +140,7 @@
                         <span>My Documents</span>
                     </button>
                     <button type="button">
-                        <img src="./images/170.ico" alt="my recent document">
+                        <img src="./images/startmenu/170.ico" alt="my recent document">
                         <span>My Recent Documents </span>
                         <span>‣</span>
                     </button>
@@ -138,39 +149,39 @@
                         <span>My Computer</span>
                     </button>
                     <button type="button">
-                        <img src="./images/142.ico" alt="network place">
+                        <img src="./images/startmenu/142.ico" alt="network place">
                         <span>My Network Places</span>
                     </button>
                     <div></div>
                     <button type="button">
-                        <img src="./images/182.ico" alt="control panel">
+                        <img src="./images/startmenu/182.ico" alt="control panel">
                         <span>Control Panel</span>
                     </button>
                     <button type="button">
-                        <img src="./images/633.ico" alt="network connection">
+                        <img src="./images/startmenu/633.ico" alt="network connection">
                         <span>Network Connections</span>
                     </button>
                     <button type="button">
-                        <img src="./images/436.ico" alt="printer">
+                        <img src="./images/startmenu/436.ico" alt="printer">
                         <span>Printers and Faxes</span>
                     </button>
                     <div></div>
                     <button type="button">
-                        <img src="./images/1375.ico" alt="search">
+                        <img src="./images/startmenu/1375.ico" alt="search">
                         <span>Search</span>
                     </button>
                     <button type="button">
-                        <img src="./images/217.ico" alt="run">
+                        <img src="./images/startmenu/217.ico" alt="run">
                         <span>Run...</span>
                     </button>
                 </div>
                 <div id="startMenuBottom">
                     <button type="button">
-                        <img src="./images/338.ico" alt="logout">
+                        <img src="./images/startmenu/338.ico" alt="logout">
                         <span>Log Off</span>
                     </button>
                     <button type="button">
-                        <img src="./images/241.ico" alt="shutdown">
+                        <img src="./images/startmenu/241.ico" alt="shutdown">
                         <span>Turn Off Computer</span>
                     </button>
 
