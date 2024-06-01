@@ -20,7 +20,7 @@ const ApiGetMiddleware = async ({ request, env, next, data }) => {
         data.username = res.payload.sub;
     }
     catch (error) {
-        console.error(error);
+        console.error(error.message + " " + token);
         return new Response("Invalid token", { status: 401 });
     }
     return await next();

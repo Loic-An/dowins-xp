@@ -114,6 +114,7 @@ class XPWindow {
         if (!this.options.notMinizable) {
             this.htmlelement.querySelector('.minimize').addEventListener('click', () => {
                 this.htmlelement.classList.toggle('minimized')
+                this.htmlelement.hidden = true
             })
         }
         if (!this.options.notMaximizable) {

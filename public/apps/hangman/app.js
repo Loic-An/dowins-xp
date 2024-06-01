@@ -8,9 +8,6 @@ export const options = { id: 'hangman', unique: true }
 export function toolBar(toolbar) {
     const newGame = document.createElement('button')
     newGame.innerText = "New Game"
-    newGame.addEventListener("click", async () => {
-        try { showNewGame(await tryStartnewGame()) } catch (e) { windowManager.error(e.message) }
-    })
     toolbar.appendChild(newGame)
     toolbar.innerHTML += `
         <label for="difficulty" class="custom-label">Difficulty</label>
@@ -21,6 +18,12 @@ export function toolBar(toolbar) {
             <option value="helldive">&#160Helldive</option>
         </select>
     `
+
+    newGame.addEventListener("pointerup", () => {
+        console.log("new game")
+        const dif = document.getElementById('difficulty')
+        tryStartnewGame(dif.options[dif.selectedIndex].value).then(v => showNewGame(v), e => windowManager.error(e.message))
+    })
     // JavaScript pour ouvrir le menu select lorsque le label est survolé
     toolbar.querySelector('.custom-label').addEventListener('mouseover', function () {
         // Simule un clic sur le menu select pour l'ouvrir
@@ -72,7 +75,7 @@ export function appContent(windowContent) {
         else if (word < 11) options[1].selected = true
         else if (word < 13) options[2].selected = true
         else options[3].selected = true
-    })
+    }, e => windowManager.error(e.message))
 }
 var guessedchar = ""    //stocke tous les caractères testés. Sert pour l'input de test des lettres
 var isplaying = false   //permet de limiter la saisie de caractères

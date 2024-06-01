@@ -22,6 +22,6 @@ export async function onRequestGet({ env, data, request }) {
     * @type {import("@cloudflare/workers-types/experimental").D1Response}
     */
     const res = await env.DB.prepare(SQL_QUERY.newGame).bind(data.username, mot, "_".repeat(mot.length)).run()
-    if (!res.error) return new Response(`{"wordLength":${mot.length}}`, { headers: jsonHeader })
-    return new Response(res.error, { status: 500 })
+    if (res.error) return new Response("Database error: " + res.error, { status: 500 })
+    return new Response(`{"wordLength":${mot.length}}`, { headers: jsonHeader })
 }

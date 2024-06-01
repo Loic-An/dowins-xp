@@ -2,9 +2,10 @@ const startupSound = new Audio('/sounds/startup.mp3')
 async function startDowins() {
     document.getElementById('bootPage').classList.add('hidden')
     document.getElementById('desktopPage').classList.remove('hidden')
-    if (isLocalStorageAvailable() && (token = localStorage.getItem("token"))) {
+    if (isLocalStorageAvailable() && (isTokenValid(token = localStorage.getItem("token")))) {
         windowManager.loadDesktop()
     } else {
+        token = ""
         await wait(1000)
         windowManager.loginWindow()
     }
@@ -43,5 +44,17 @@ async function signin(username, password) {
         throw new Error(text)
     } catch (error) {
         windowManager.error(error.message || "An error occurred while trying to sign in.");
+    }
+}
+
+function isTokenValid(token) {
+    if (!token || typeof token !== "string") return false
+    const parts = token.split('.')
+    if (parts.length !== 3) return false
+    try {
+        const payload = JSON.parse(atob(parts[1]))
+        return payload.exp > Date.now() / 1000
+    } catch (e) {
+        return false
     }
 }

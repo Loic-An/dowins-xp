@@ -1,6 +1,7 @@
 #hangman {
     .toolbar {
-
+        display: grid;
+        grid-template: 1.5vmin / max-content 100%;
         /* Style pour le label */
         .custom-label {
             display: block;
@@ -12,6 +13,8 @@
             opacity: 0;
             /* Rend le select invisible */
             position: absolute;
+            top:3.5vmin;
+            left:6vmin;
             /* Permet de superposer le select sur le label */
             width: 200px;
             /* ou la largeur que vous souhaitez */
