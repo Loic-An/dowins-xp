@@ -38,8 +38,8 @@ class WindowManager {
         this.startmenu = startmenu
         this.desktop = desktop
         this.apps = []
-        this.desktop.addEventListener('mouseup', () => {
-            this.desktop.removeEventListener('mousemove', movehandler)
+        this.desktop.addEventListener('pointerup', () => {
+            this.desktop.removeEventListener('pointermove', movehandler)
             this.clickManager.activeTarget = null
             this.clickManager.action = null
         })
@@ -50,13 +50,11 @@ class WindowManager {
      */
     addWindow(window) {
         if (window.options.unique) {
-            this.windows.forEach(v => {
-                if (v.options.id === window.options.id) {
-                    this.foregroundWindow(v)
-                    return
-                }
-            })
-            return
+            const old = this.windows.find(v => v.options.id === window.options.id)
+            if (old) {
+                this.foregroundWindow(old)
+                return
+            }
         }
         window.initialize()
         this.windows.push(window)
@@ -229,9 +227,10 @@ class WindowManager {
                 const app = app_modules[i].value
                 startMenuleft.childNodes[i].addEventListener('click', () => {
                     try {
-                        this.addWindow(new XPWindow(app.displayName, `./apps/${this.apps[i]}/app.ico`, app.appContent, app.toolbar, app.options))
+                        this.addWindow(new XPWindow(app.displayName, `./apps/${this.apps[i]}/app.ico`, app.appContent, app.toolBar, app.options))
                     } catch (e) {
                         windowManager.error("An error occurred while trying to open the app: " + e.message)
+                        console.error(e)
                     }
                 })
             } else {
@@ -264,7 +263,7 @@ class WindowManager {
     registerActiveTarget(target, action) {
         this.clickManager.activeTarget = target
         this.clickManager.action = action
-        this.desktop.addEventListener('mousemove', movehandler)
+        this.desktop.addEventListener('pointermove', movehandler)
     }
     popWindow() {
         if (this.windows.length > 0) {

@@ -78,7 +78,6 @@ class Prompt {
                 } else this.ps[this.ps.length - 1].textContent = 'C:/>'
                 break
             default:
-                console.log(e.key)
                 e.key.length === 1 && this.appendText(e.key)
         }
     }
@@ -118,7 +117,10 @@ class Prompt {
                 this.addText(`${document.getElementById('startMenuUsername').innerText}\nC:/>`)
                 break
             default:
-                this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>`)
+                if (command.startsWith('echo'))
+                    this.addText(command.substring(5) + '\nC:/>')
+                else
+                    this.addText(`'${command}' is not recognized as an internal or external command, operable program or batch file.\nC:/>`)
                 break
         }
         this.history.push(command)

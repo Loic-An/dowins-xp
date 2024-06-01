@@ -18,6 +18,7 @@ class XPWindow {
         this.imgLocation = imgLocation
         this.options = options
         this.options.noToolbar = options.noToolbar || !toolbar
+        console.log("tttt0", this.options)
         this.htmlelement = XPWindow.createBasicWindow(title, imgLocation, this.options)
         this.content = appcontent
         this.toolbar = toolbar
@@ -104,7 +105,7 @@ class XPWindow {
         this.toolbar && this.toolbar(this.htmlelement.querySelector('.toolbar'))
         this.options.id && this.htmlelement.setAttribute('id', this.options.id)
         //initialize event listeners
-        this.htmlelement.querySelector('header').addEventListener('mousedown', (e) => {
+        this.htmlelement.querySelector('header').addEventListener('pointerdown', (e) => {
             if (this.htmlelement.classList.contains('maximized')) return
             if (this.htmlelement.classList.contains('minimized')) return
             windowManager.foregroundWindow(this)
@@ -121,27 +122,27 @@ class XPWindow {
             })
         }
         if (!this.options.notClosable) {
-            this.htmlelement.querySelector('.close').addEventListener('mouseup', () => {
+            this.htmlelement.querySelector('.close').addEventListener('pointerup', () => {
                 windowManager.removeWindow(this)
             })
         }
         if (!this.options.notResizable) {
-            this.htmlelement.querySelector('.windowUp').addEventListener('mousedown', (e) => {
+            this.htmlelement.querySelector('.windowUp').addEventListener('pointerdown', (e) => {
                 if (this.htmlelement.classList.contains('maximized')) return
                 if (this.htmlelement.classList.contains('minimized')) return
                 windowManager.registerActiveTarget(this, "resizeUp")
             })
-            this.htmlelement.querySelector('.windowDown').addEventListener('mousedown', (e) => {
+            this.htmlelement.querySelector('.windowDown').addEventListener('pointerdown', (e) => {
                 if (this.htmlelement.classList.contains('maximized')) return
                 if (this.htmlelement.classList.contains('minimized')) return
                 windowManager.registerActiveTarget(this, "resizeDown")
             })
-            this.htmlelement.querySelector('.windowLeft').addEventListener('mousedown', (e) => {
+            this.htmlelement.querySelector('.windowLeft').addEventListener('pointerdown', (e) => {
                 if (this.htmlelement.classList.contains('maximized')) return
                 if (this.htmlelement.classList.contains('minimized')) return
                 windowManager.registerActiveTarget(this, "resizeLeft")
             })
-            this.htmlelement.querySelector('.windowRight').addEventListener('mousedown', (e) => {
+            this.htmlelement.querySelector('.windowRight').addEventListener('pointerdown', (e) => {
                 if (this.htmlelement.classList.contains('maximized')) return
                 if (this.htmlelement.classList.contains('minimized')) return
                 windowManager.registerActiveTarget(this, "resizeRight")
@@ -149,8 +150,8 @@ class XPWindow {
         }
     }
     /**
-     * moves the window according to the mouse position
-     * @param {MouseEvent} e
+     * moves the window according to the pointer position
+     * @param {PointerEvent} e
      * @param {"move"|"resizeUp"|"resizeDown"|"resizeLeft"|"resizeRight"} action 
      */
     move(e, action) {

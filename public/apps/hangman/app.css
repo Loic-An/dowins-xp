@@ -1,0 +1,35 @@
+#hangman {
+    .toolbar {
+
+        /* Style pour le label */
+        .custom-label {
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Masquez la barre de déroulement du menu select */
+        .custom-select {
+            opacity: 0;
+            /* Rend le select invisible */
+            position: absolute;
+            /* Permet de superposer le select sur le label */
+            width: 200px;
+            /* ou la largeur que vous souhaitez */
+            height: 0;
+            /* Réduit la hauteur à zéro pour cacher la barre de déroulement */
+            overflow: hidden;
+            /* Empêche l'affichage du contenu débordant */
+        }
+
+
+        /* Affichez le menu select lorsque le label est survolé */
+        .custom-label:hover+.custom-select,
+        .custom-select:hover {
+            opacity: 1;
+            /* Rend le select visible */
+            height: auto;
+            /* Permet au select de montrer toutes les options */
+        }
+
+    }
+}

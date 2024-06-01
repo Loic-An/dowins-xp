@@ -1,5 +1,5 @@
 "use strict";
-import { comparePassword, createNewToken, prepareDBpassword } from "./_shared";
+import { comparePassword, createNewToken, SQL_QUERY } from "./_shared";
 
 /**
  * login function
@@ -8,7 +8,7 @@ import { comparePassword, createNewToken, prepareDBpassword } from "./_shared";
  */
 export async function onRequestPost({ data, env }) {
     console.log(data)
-    const res = await prepareDBpassword(env.DB, data.username)
+    const res = await env.DB.prepare(SQL_QUERY.getPassword).bind(data.username).run()
     console.log(res)
     if (res.error) throw new Error(res.error)
     if (!res.results[0]) return new Response("User not found", { status: 404 })

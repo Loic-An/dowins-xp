@@ -89,3 +89,24 @@ function createEnum(values) {
     return Object.freeze(enumObject);
 }
 const browserEnum = createEnum(["webkit", "firefox", "chromium"])
+
+/**
+ * Check if password is strong.
+ * @param {string} password 
+ * @returns {boolean}
+ */
+function isPasswordStrong(password) {
+    if (password.length < 8) {
+        windowManager.error("password must have at least 8 characters")
+        return false
+    }
+    if (!password.match("[a-zA-Z]")) {
+        windowManager.error("password must have at least 1 letter")
+        return false
+    }
+    if (!password.match("[0-9]")) {
+        windowManager.error("password must have at least 1 digit")
+        return false
+    }
+    return true
+}
