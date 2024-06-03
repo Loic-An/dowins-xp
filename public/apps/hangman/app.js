@@ -19,7 +19,7 @@ export function toolBar(toolbar) {
         </select>
     `
 
-    newGame.addEventListener("pointerup", () => {
+    newGame.addEventListener("click", () => {
         console.log("new game")
         const dif = document.getElementById('difficulty')
         tryStartnewGame(dif.options[dif.selectedIndex].value).then(v => showNewGame(v), e => windowManager.error(e.message))

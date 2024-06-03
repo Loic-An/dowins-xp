@@ -12,6 +12,6 @@ export function toolBar(toolbar) {
 /**
  * @type {(windowContent:HTMLElement)=>void}
  */
-export function appContent() {
-
+export function appContent(windowContent) {
+    throw new Error('Not implemented :/')
 }

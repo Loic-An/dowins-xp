@@ -239,6 +239,7 @@ class WindowManager {
         }
     }
     /**
+     * get the XPWindow object from windowContent
      * @param {HTMLDivElement} windowContent
      * @returns {XPWindow|null}
      */
@@ -272,18 +273,33 @@ class WindowManager {
         }
     }
     error(message) {
-        this.addWindow(new XPWindow('Error', '', (div) => {
-            div.innerHTML = `<p>${message}</p>`
+        this.addWindow(new XPWindow('Error', 'images/111.ico', (div) => {
+            div.innerHTML = `<img src="images/111.ico"><span>${message}</span>`
+            const button = document.createElement('button')
+            button.innerText = 'OK'
+            button.addEventListener('click', () => this.removeWindow(this.reverseLookup(div)))
+            div.appendChild(button)
+            div.classList.add('error')
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
     warn(message) {
-        this.addWindow(new XPWindow('Warning', '', (div) => {
-            div.innerHTML = `<p>${message}</p>`
+        this.addWindow(new XPWindow('Warning', "images/238.ico", (div) => {
+            div.innerHTML = `<img src="images/238.ico"><span>${message}</span>`
+            const button = document.createElement('button')
+            button.innerText = 'OK'
+            button.addEventListener('click', () => this.removeWindow(this.reverseLookup(div)))
+            div.appendChild(button)
+            div.classList.add('error')
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
     log(message) {
-        this.addWindow(new XPWindow('Log', '', (div) => {
-            div.innerHTML = `<p>${message}</p>`
+        this.addWindow(new XPWindow('Log', "images/109.ico", (div) => {
+            div.innerHTML = `<img src="images/109.ico"><span>${message}</span>`
+            const button = document.createElement('button')
+            button.innerText = 'OK'
+            button.addEventListener('click', () => this.removeWindow(this.reverseLookup(div)))
+            div.appendChild(button)
+            div.classList.add('error')
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
     clockUpdater() {

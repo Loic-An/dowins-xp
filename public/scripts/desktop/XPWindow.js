@@ -18,7 +18,6 @@ class XPWindow {
         this.imgLocation = imgLocation
         this.options = options
         this.options.noToolbar = options.noToolbar || !toolbar
-        console.log("tttt0", this.options)
         this.htmlelement = XPWindow.createBasicWindow(title, imgLocation, this.options)
         this.content = appcontent
         this.toolbar = toolbar
