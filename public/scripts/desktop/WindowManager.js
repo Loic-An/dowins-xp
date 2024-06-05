@@ -195,7 +195,11 @@ class WindowManager {
         const username = JSON.parse(atob(token.split('.')[1])).sub
         this.clearWindow() // remove login window
         this.taskbar.classList.remove('hidden')
-        document.querySelector('#desktopPage > img').classList.remove('hidden')
+        const background = document.querySelector('#desktopPage > img')
+        background.classList.remove('hidden')
+        document.addEventListener('resize', (e) => {
+            background.classList.toggle('portrait', 16 * e.view.innerWidth < 9 * e.view.innerHeight)
+        })
         document.getElementById('desktopIcons').classList.remove('hidden')
         document.querySelectorAll('#desktopIcons > div').forEach((v) => {
             v.addEventListener('click', (e) => {

@@ -1,5 +1,7 @@
 var token = ""
 const windowManager = new WindowManager(document.getElementById('taskBar'), document.getElementById('startMenu'), document.getElementById('desktopPage'))
+const serviceWorker = navigator.serviceWorker.controller
+!serviceWorker && console.warn("Service worker not found")
 window.addEventListener("DOMContentLoaded", entrypoint)
 
 function entrypoint() {

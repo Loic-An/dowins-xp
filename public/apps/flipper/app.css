@@ -1,0 +1,25 @@
+#flipper {
+    .windowContent {
+        background:#fff;
+        padding:0;
+        width:600px;
+        height:435px;
+        overflow: hidden;
+        iframe {
+            width:600px;
+            height:435px;
+            border:0;
+            overflow:hidden;
+        }
+    }
+}
+#flipper.maximized {
+    .windowContent {
+        width:100%;
+        height:100%;
+        iframe {
+            width:100%;
+            height:100%;
+        }
+    }
+}

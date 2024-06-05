@@ -1,4 +1,4 @@
-const VERSION = 1
+const VERSION = 2
 const PRECACHE = `precache-v${VERSION}`;
 const RUNTIME = 'runtime';
 
@@ -35,21 +35,6 @@ const PRECACHE_URLS = ["/",
     "/images/startmenu/633.ico",
     "/images/497.ico",
     "/site.webmanifest",
-    "/apps/command_prompt/app.css",
-    "/apps/hangman/app.css",
-    "/apps/internet_explorer/app.css",
-    "/apps/media_center/app.css",
-    "/apps/flipper/app.css",
-    "/apps/command_prompt/app.js",
-    "/apps/hangman/app.js",
-    "/apps/internet_explorer/app.js",
-    "/apps/media_center/app.js",
-    "/apps/flipper/app.js",
-    "/apps/command_prompt/app.ico",
-    "/apps/hangman/app.ico",
-    "/apps/internet_explorer/app.ico",
-    "/apps/media_center/app.ico",
-    "/apps/flipper/app.ico",
     "/images/bclose.png",
     "/images/bmaximize.png",
     "/images/bminimize.png"];
@@ -108,3 +93,13 @@ const onfetch = (event) => {
 // If no response is found, it populates the runtime cache with the response
 // from the network before returning it to the page.
 self.addEventListener('fetch', onfetch)
+
+self.addEventListener('message', (event) => {
+    if (event.data === "clear") {
+        caches.keys().then(cacheNames => {
+            return Promise.all(cacheNames.map(cacheName => {
+                return caches.delete(cacheName);
+            }));
+        }).then(() => console.log("cacheclear"), console.error);
+    }
+})
