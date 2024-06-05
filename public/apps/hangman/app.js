@@ -8,6 +8,7 @@ export const options = { id: 'hangman', unique: true }
 export function toolBar(toolbar) {
     const newGame = document.createElement('button')
     newGame.innerText = "New Game"
+    newGame.id = "newGameBtn"
     toolbar.appendChild(newGame)
     toolbar.innerHTML += `
         <label for="difficulty" class="custom-label">Difficulty</label>
@@ -18,11 +19,12 @@ export function toolBar(toolbar) {
             <option value="helldive">&#160Helldive</option>
         </select>
     `
+    const dif = toolbar.querySelector('#difficulty')
 
-    newGame.addEventListener("click", () => {
-        console.log("new game")
-        const dif = document.getElementById('difficulty')
-        tryStartnewGame(dif.options[dif.selectedIndex].value).then(v => showNewGame(v), e => windowManager.error(e.message))
+    toolbar.querySelector('#newGameBtn').addEventListener('click', async () => {
+        console.log("new game", dif.options[dif.selectedIndex].value)
+        try { showNewGame(await tryStartnewGame(dif.options[dif.selectedIndex].value)) }
+        catch (e) { windowManager.error(e.message) }
     })
     // JavaScript pour ouvrir le menu select lorsque le label est survolé
     toolbar.querySelector('.custom-label').addEventListener('mouseover', function () {
@@ -255,7 +257,7 @@ async function tryGetGameState() {
  */
 async function tryStartnewGame(difficulty) {
     const path = "/api/newGame" + (difficulty ? "?difficulty=" + difficulty : "")
-    const response = await getData(window.location.origin + "/api/newGame")
+    const response = await getData(window.location.origin + path)
     if (response.ok) {
         return await response.json()
     }

@@ -1,4 +1,6 @@
 const startupSound = new Audio('/sounds/startup.mp3')
+const shutdownSound = new Audio('/sounds/shutdown.mp3')
+const errorSound = new Audio('/sounds/error.mp3')
 async function startDowins() {
     document.getElementById('bootPage').classList.add('hidden')
     document.getElementById('desktopPage').classList.remove('hidden')
@@ -22,6 +24,7 @@ async function login(username, password) {
         const text = await res.text()
         if (res.ok) {
             localStorage.setItem('token', token = text)
+            startupSound.play()
             windowManager.loadDesktop()
             return
         }

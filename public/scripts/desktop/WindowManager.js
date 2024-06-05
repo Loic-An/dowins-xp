@@ -216,9 +216,12 @@ class WindowManager {
         document.getElementById('startButton').addEventListener('click', () => this.toggleStartMenu())
         document.getElementById('startMenuUsername').innerText = username
         document.querySelectorAll('#startMenuBottom > button').forEach((v) => {
-            v.addEventListener('click', () => {
+            v.addEventListener('click', async () => {
                 localStorage.removeItem('token')
-                if (v.children[1].innerHTML === "Turn Off Computer") localStorage.removeItem('hasBooted')
+                if (v.children[1].innerHTML === "Turn Off Computer") {
+                    localStorage.removeItem('hasBooted')
+                    shutdownSound.play()
+                }
                 window.location.reload()
             })
         })
@@ -277,6 +280,7 @@ class WindowManager {
         }
     }
     error(message) {
+        errorSound.play()
         this.addWindow(new XPWindow('Error', 'images/111.ico', (div) => {
             div.innerHTML = `<img src="images/111.ico"><span>${message}</span>`
             const button = document.createElement('button')
@@ -287,6 +291,7 @@ class WindowManager {
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
     warn(message) {
+        errorSound.play()
         this.addWindow(new XPWindow('Warning', "images/238.ico", (div) => {
             div.innerHTML = `<img src="images/238.ico"><span>${message}</span>`
             const button = document.createElement('button')
