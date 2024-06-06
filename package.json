@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "node parsemiserable.js && node putnewprecacheversion.js $(git rev-parse --short HEAD)",
+    "build": "node parsemiserable.js && node updateprecacheversion.js $(git rev-parse --short HEAD)",
     "deploy": "wrangler deploy",
     "postinstall": "wrangler d1 execute dowins-xp --local --file schema.sql",
     "prestart": "node ./generateprivatekey.js",
