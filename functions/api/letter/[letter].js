@@ -9,7 +9,8 @@ export async function onRequestGet({ params, env, data }) {
     if (!params.letter) {
         return new Response("Missing letter", { status: 400 })
     }
-    if (params.letter.length !== 1) {
+    console.log(params.letter, params.letter.length)
+    if (params.letter.length > 1) {
         return new Response("More than one letter", { status: 400 })
     }
     const letter = params.letter[0].toLowerCase()
@@ -30,7 +31,6 @@ export async function onRequestGet({ params, env, data }) {
      * @type {{Username:string,Word:string, CorrectGuesses:string, IncorrectGuesses:string}}
      */
     const game = req.results[0]
-    console.log("before", game)
     let positions = []
     let isGameOver = false
     for (let i = 0; i < game.Word.length; i++) {
@@ -45,7 +45,6 @@ export async function onRequestGet({ params, env, data }) {
         game.CorrectGuesses = game.CorrectGuesses.split('').map((v, i) => positions.includes(i) ? letter : v).join('')
         isGameOver = game.CorrectGuesses === game.Word
     }
-    console.log("after", game)
     const res = await env.DB.prepare(isGameOver ? SQL_QUERY.deleteGame : SQL_QUERY.updateGame).bind(...(isGameOver ? [data.username] : [data.username, game.CorrectGuesses, game.IncorrectGuesses])).run()
     if (res.error) {
         return new Response("unable to update gameState", { status: 500 })

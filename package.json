@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "node parsemiserable.js && node updateprecacheversion.js $(git rev-parse --short HEAD)",
+    "build": "node updateprecacheversion.js $(git rev-parse --short HEAD)",
     "deploy": "wrangler deploy",
-    "postinstall": "wrangler d1 execute dowins-xp --local --file schema.sql",
+    "postinstall": "wrangler d1 execute dowins-xp --local --file schema.sql && node parsemiserable.js",
     "prestart": "node ./generateprivatekey.js",
     "start": "wrangler pages dev",
     "stop": "kill -9 $(ss --listening --process --tcp | grep 'workerd' | awk -F 'pid=' '{print $2}' | awk -F ',' '{print $1}' | sort -u) >/dev/null 2>&1 || true",

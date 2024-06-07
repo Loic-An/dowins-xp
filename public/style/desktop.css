@@ -116,7 +116,7 @@
 .window {
     display: grid;
     min-width: 200px;
-    grid-template: 0.2vmin 2vmin auto auto 0.2vmin/ 0.2vmin auto 0.2vmin;
+    grid-template: 0.2vmin 2vmin 2vmin auto 0.2vmin/ 0.2vmin auto 0.2vmin;
     background: rgb(61,149,255);
     background: linear-gradient(135deg, rgba(61,149,255,1) 0%, rgb(3, 104, 250) 50%, rgba(0,30,160,1) 100%);
     position: absolute;
@@ -243,6 +243,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    
+    grid-template: 0.2vmin 2vmin auto auto 0.2vmin/ 0.2vmin auto 0.2vmin;
 
     .toolbar {
         display: grid;

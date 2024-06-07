@@ -19,9 +19,10 @@ export function toolBar(toolbar) {
             <option value="helldive">&#160Helldive</option>
         </select>
     `
+    /**@type {HTMLSelectElement}*/
     const dif = toolbar.querySelector('#difficulty')
 
-    toolbar.querySelector('#newGameBtn').addEventListener('click', async () => {
+    toolbar.querySelector('#newGameBtn')?.addEventListener('click', async () => {
         console.log("new game", dif.options[dif.selectedIndex].value)
         try { showNewGame(await tryStartnewGame(dif.options[dif.selectedIndex].value)) }
         catch (e) { windowManager.error(e.message) }
@@ -48,27 +49,31 @@ export function toolBar(toolbar) {
 export function appContent(windowContent) {
     windowContent.id = "gameContainer"
     windowContent.innerHTML = `
-        <form class="notplaying">
-            <input type="text" id="lettertotry" placeholder="Enter a letter" required>
-            <button type="submit">Try</button>
-        </form>
-        <div id="gameover"></div>
-        <div id="word2guess"></div>
-        <svg width="258" height="400" xmlns="http://www.w3.org/2000/svg">
-    <rect y="380" x="2" width="250" height="10" style="fill:yellow;stroke-width:4;stroke:black"></rect>
-    <line x1="20" y1="380" x2="20" y2="10" style="stroke:black;stroke-width:4"></line>
-    <line x1="18" y1="10" x2="140" y2="10" style="stroke:black;stroke-width:4"></line>
-    <line id="i1" x1="138" y1="10" x2="138" y2="50" style="stroke:black;stroke-width:4"></line>
-    <circle id="i2" cx="138" cy="80" r="30" stroke="black" stroke-width="4" fill="yellow"></circle>
-    <line id="i3" x1="138" y1="110" x2="138" y2="250" style="stroke:black;stroke-width:4"></line>
-    <line id="i4" x1="138" y1="140" x2="100" y2="200" style="stroke:black;stroke-width:4"></line>
-    <line id="i5" x1="138" y1="140" x2="178" y2="200" style="stroke:black;stroke-width:4"></line>
-    <line id="i6" x1="138" y1="250" x2="100" y2="310" style="stroke:black;stroke-width:4"></line>
-    <line id="i7" x1="138" y1="250" x2="178" y2="310" style="stroke:black;stroke-width:4"></line>
-</svg>
+    <div id="word2guess"></div>
+    <div id="gameover"></div>
+    <svg width="258" height="400" xmlns="http://www.w3.org/2000/svg">
+        <rect y="380" x="2" width="250" height="10"></rect>
+        <line x1="20" y1="380" x2="20" y2="10"></line>
+        <line x1="18" y1="10" x2="140" y2="10"></line>
+        <line id="i1" x1="138" y1="10" x2="138" y2="50"></line>
+        <circle id="i2" cx="138" cy="80" r="30"></circle>
+        <line id="i3" x1="138" y1="110" x2="138" y2="250"></line>
+        <line id="i4" x1="138" y1="140" x2="100" y2="200"></line>
+        <line id="i5" x1="138" y1="140" x2="178" y2="200"></line>
+        <line id="i6" x1="138" y1="250" x2="100" y2="310"></line>
+        <line id="i7" x1="138" y1="250" x2="178" y2="310"></line>
+    </svg>
+    <div id="letters"></div>
     `
-    windowContent.querySelector('form')?.addEventListener('submit', testcharcallback)
-    document.getElementById('lettertotry')?.addEventListener('input', charInputChecker)
+    const letters = windowContent.querySelector('#letters')
+    let letter;
+    for (let i = 0; i < 26; i++) {
+        letter = document.createElement('span')
+        letter.innerText = String.fromCharCode(65 + i)
+        letter.addEventListener('click', testcharcallback)
+        letters.appendChild(letter)
+    }
+
     tryGetGameState().then(gameState => {
         displayGameState(gameState)
         const word = document.getElementById("word2guess")?.innerText.length
@@ -79,21 +84,8 @@ export function appContent(windowContent) {
         else options[3].selected = true
     }, e => windowManager.error(e.message))
 }
-var guessedchar = ""    //stocke tous les caractères testés. Sert pour l'input de test des lettres
+//var guessedchar = ""    //stocke tous les caractères testés. Sert pour l'input de test des lettres
 var isplaying = false   //permet de limiter la saisie de caractères
-
-/**
- * Empeche de supprimer les tentatives précédentes de l'input de test, et de retenter une lettre deja testé.
- * @param {Event & {target:{value:any}}} ev 
- */
-function charInputChecker(ev) {
-    if (isplaying && ev.target.value.length > guessedchar.length && ev.target.value[guessedchar.length].match('[a-zA-Z]')
-        && guessedchar.indexOf(ev.target.value[guessedchar.length].toUpperCase()) < 0) {
-        ev.target.value = guessedchar + ev.target.value[guessedchar.length].toUpperCase()
-        return
-    }
-    ev.target.value = guessedchar
-}
 
 /**
  * 
@@ -132,7 +124,6 @@ function displayGameState(gameState) {
         updateSVG(7)
         const go = document.getElementById("gameover")
         if (go) go.innerText = 'No active game. Click on the "New Game" button.'
-        document.querySelector('#gameContainer form')?.classList.add('notplaying')
     }
 }
 
@@ -141,28 +132,31 @@ function displayGameState(gameState) {
  * @param {SubmitEvent} ev 
  */
 async function testcharcallback(ev) {
-    ev.preventDefault()
+    //ev.preventDefault()
     if (!isplaying) {
-        windowManager.warn("Start a new game before submiting a character!")
+        windowManager.log("Start a new game before submiting a character!")
+        return
+    }
+    if (ev.target.classList.contains('ko') || ev.target.classList.contains('ok')) {
+        windowManager.log("You already tried this character!")
         return
     }
     try {
-        if (!ev.target) throw new Error("no form found")
-        const guesslist = ev.target.elements['lettertotry'].value
-        if (guesslist.length === guessedchar.length) throw new Error("Enter a char before submitting!")
-        const char = guesslist[guessedchar.length].toUpperCase()
+        if (!ev.target) throw new Error("no letter found")
+        const char = ev.target.innerText.toUpperCase()
         const guess = await try2GuessLetter(char)
-        guessedchar += char
         if (!guess.isCorrect) {
             if (!guess.errors) throw new Error("no eror but incorrect")
             updateSVG(guess.errors)
+            ev.target.classList.add('ko')
         } else {
             if (!guess.positions) throw new Error("correct but no positions")
             updateWord2Guess(char, guess.positions)
+            ev.target.classList.add('ok')
         }
         if (guess.isGameOver) {
             isplaying = false
-            document.querySelector('#gameContainer form')?.classList.add('notplaying')
+            //document.querySelector('#gameContainer form')?.classList.add('notplaying')
             const gameover = document.getElementById("gameover")
             const word = document.getElementById("word2guess")
             if (!gameover || !word) throw new Error("gameover or word2guess not found")
@@ -173,11 +167,8 @@ async function testcharcallback(ev) {
             }
             gameover.innerText += '. Click on the "New Game" button to start a new game.'
             word.innerText = ""
-        } else { guessedchar += "," }
-        ev.target.elements['lettertotry'].value = guessedchar
-    } catch (e) {
-        windowManager.error(e.message)
-    }
+        }
+    } catch (e) { windowManager.error(e.message) }
 }
 
 /**
@@ -188,24 +179,26 @@ async function testcharcallback(ev) {
 function showNewGame(gameState) {
     const word = document.getElementById("word2guess")
     if (!word) return
+    const letters = document.querySelectorAll('#letters span')
+    letters.forEach((v) => { v.classList.remove('ko', 'ok') })
     if ("correctLetters" in gameState) {
         word.innerText = gameState.correctLetters.join("")
         if (gameState.nbErrors) {
-            guessedchar = gameState.incorrectLetters.join(",") + ","
+            gameState.incorrectLetters.map((v) => {
+                const i = v.charCodeAt(0) - 65
+                if (i > -1) letters[i].classList.add('ko')
+            })
         }
-        let f = gameState.correctLetters.filter((v) => v != '_')
-        if (f.join("").length)
-            guessedchar += f.filter((v) => v != '_').join(",") + ","
+        gameState.correctLetters.filter((v) => v != '_')
+            .forEach((v) => {
+                letters[v.charCodeAt(0) - 65].classList.add('ok')
+            })
         updateSVG(gameState.nbErrors)
     } else {
         word.innerText = "_".repeat(gameState.wordLength)
-        guessedchar = ""
         updateSVG(0)
     }
-
-    document.getElementById("lettertotry").value = guessedchar
     document.getElementById("gameover").innerText = ""
-    document.querySelector('#gameContainer form')?.classList.remove('notplaying')
     isplaying = true
 }
 

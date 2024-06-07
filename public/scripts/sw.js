@@ -55,7 +55,7 @@ self.addEventListener('activate', (/**@type {import("@cloudflare/workers-types/e
         .then(cachesToDelete => Promise.all(cachesToDelete.map(cacheToDelete =>
             caches.delete(cacheToDelete))))
         .then(() => self.clients.claim()));
-    console.log("activated")
+    console.log("Service Worker activated, version " + VERSION)
 })
 
 // The fetch handler serves responses for same-origin resources from a cache.
@@ -64,7 +64,6 @@ self.addEventListener('activate', (/**@type {import("@cloudflare/workers-types/e
 self.addEventListener('fetch', (/** @type {import("@cloudflare/workers-types/experimental").FetchEvent} */event) => {
     if (event.request.method !== "GET") return;
     if (event.request.url.startsWith("/api/")) return;
-    console.log(event.request.url);
     // Prevent the default, and handle the request ourselves.
     event.respondWith(caches.match(event.request)
         .then((r) => r ?? fetch(event.request))

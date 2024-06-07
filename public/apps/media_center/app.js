@@ -3,7 +3,7 @@ export const displayName = 'Media Center';
 /**
  * @type {{notMinizable?:boolean,notMaximizable?:boolean,notClosable?:boolean,notResizable?:boolean,noToolbar?:boolean,id?:string}}
  */
-export const options = { id: 'mediaCenter', notResizable: true }
+export const options = { id: 'mediaCenter' }
 
 
 export const toolBar = undefined;

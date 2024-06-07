@@ -109,7 +109,7 @@ class WindowManager {
         return +this.taskbar.style.zIndex
     }
     loginWindow() {
-        this.addWindow(new XPWindow('Log On to Windows', '', (div) => {
+        this.addWindow(new XPWindow('Log On to Dowins', '', (div) => {
             div.innerHTML = `
             <form id="loginForm">
             <label for="username">Username :</label>
@@ -220,7 +220,7 @@ class WindowManager {
                 localStorage.removeItem('token')
                 if (v.children[1].innerHTML === "Turn Off Computer") {
                     localStorage.removeItem('hasBooted')
-                    shutdownSound.play()
+                    await shutdownSound.play()
                 }
                 window.location.reload()
             })
@@ -281,6 +281,7 @@ class WindowManager {
     }
     error(message) {
         errorSound.play()
+        console.error(message)
         this.addWindow(new XPWindow('Error', 'images/111.ico', (div) => {
             div.innerHTML = `<img src="images/111.ico"><span>${message}</span>`
             const button = document.createElement('button')
@@ -302,7 +303,7 @@ class WindowManager {
         }, null, { notMinizable: true, notMaximizable: true, notResizable: true, notClosable: false }))
     }
     log(message) {
-        this.addWindow(new XPWindow('Log', "images/109.ico", (div) => {
+        this.addWindow(new XPWindow('Info', "images/109.ico", (div) => {
             div.innerHTML = `<img src="images/109.ico"><span>${message}</span>`
             const button = document.createElement('button')
             button.innerText = 'OK'

@@ -7,10 +7,11 @@
 
 Source code of Socrimoft Dowins XP (web version). 
 Shipped with :
-- Explorer of the internet 8
+- ~~Explorer of the internet 8~~ (not working)
 - Command Prompt
 - Hangman Game
 - Media center
+- 3D Pinball
 
 ## Installation
 Make sure you have [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) installed on your system before running these commands.  
@@ -28,11 +29,6 @@ To install this project, you can follow these steps:
 3. Install the dependencies:
     ```
     npm install
-    ```
-
-4. Build the project:
-    ```
-    npm run build
     ```
 
 You are now ready to start the application!
@@ -54,10 +50,11 @@ After starting the application, just start your favourite browser and go to http
 
 ## Contributing
 
-You're free to submit an issue and/or a PR, but I probably won't do anything about it as this project's deadline is June 5, 2024.
+You're free to submit issues and/or PRs, but I probably won't do anything about it as this project's deadline is June 7, 2024.
 
 ## Credits
 
 This project use assets that i do not own :
 - Lots of images are extracted and/or altered and originally made by Microsoft
 - This is also true for sounds
+- [3D Pinball](https://github.com/alula/SpaceCadetPinball)

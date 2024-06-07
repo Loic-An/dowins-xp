@@ -1,11 +1,17 @@
 #hangman {
+    width:80vmin;
     .toolbar {
         display: grid;
-        grid-template: 1.5vmin / max-content 100%;
+        grid-template: 2vmin / max-content max-content;
+        background-color: #f0f0f0;
+        border-inline: 0.1vmin solid blue;
         /* Style pour le label */
         .custom-label {
             display: block;
             cursor: pointer;
+            background-color: #f0f0f0;
+            border-inline: 0.1vmin solid black;
+            padding-inline: 0.8vmin;
         }
 
         /* Masquez la barre de déroulement du menu select */
@@ -13,8 +19,8 @@
             opacity: 0;
             /* Rend le select invisible */
             position: absolute;
-            top:3.5vmin;
-            left:6vmin;
+            top:4.2vmin;
+            left:8.5vmin;
             /* Permet de superposer le select sur le label */
             width: 200px;
             /* ou la largeur que vous souhaitez */
@@ -34,5 +40,47 @@
             /* Permet au select de montrer toutes les options */
         }
 
+    }
+    #word2guess {
+        letter-spacing: 1vmin;
+    }
+    .windowContent {
+        display:grid;
+        grid-template: max-content auto / max-content auto;
+        span {
+            font-size: 2vmin;
+            margin:0.4vmin;
+            padding:0.2vmin;
+            border: 0.1vmin solid black;
+        }
+        .ok {
+            background-color: green;
+           color: white;
+        }
+        .ko {
+            background-color: red;
+            color: white;
+        }
+        svg {
+            rect {
+                fill: yellow;
+                stroke-width: 4;
+                stroke: black;
+            }
+            line {
+                stroke: black;
+                stroke-width: 4;
+            }
+            circle {
+                stroke: black;
+                stroke-width: 4;
+                fill: yellow;
+            }
+        }
+        #letters {
+            display:flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
     }
 }

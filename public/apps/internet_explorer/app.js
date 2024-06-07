@@ -40,7 +40,6 @@ export function appContent(window) {
     window.appendChild(frame);
     iframeURLChange(frame, (url) => console.log(url));
     console.log(frame.contentWindow)
-    //console.log(iframe.contentWindow.location.href)
 }
 
 function loadURL(url) {
